@@ -1,7 +1,3 @@
--- Full Script: 3BB GUI with Build a Boat, Bedwars, FPS Booster, Infinite Yield, and more
-
-if game.CoreGui:FindFirstChild("ThreeBMenu") then game.CoreGui:FindFirstChild("ThreeBMenu"):Destroy() end
-
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RS = game:GetService("RunService")
@@ -66,7 +62,6 @@ gui.Name = "ThreeBMenu"
 gui.ResetOnSpawn = false
 gui.Parent = game:GetService("CoreGui")
 
--- Open GUI Button (draggable)
 local openButton = Instance.new("TextButton")
 openButton.Size = UDim2.new(0, 100, 0, 30)
 openButton.Position = UDim2.new(0, 10, 0.5, -15)
@@ -83,7 +78,7 @@ mainFrame.Size = UDim2.new(0, 320, 0, 400)
 mainFrame.Position = UDim2.new(0.5, -160, 0.5, -200)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.Visible = false
-mainFrame.Active = true -- Draggable
+mainFrame.Active = true
 mainFrame.Parent = gui
 
 local corner = Instance.new("UICorner", mainFrame)
@@ -185,14 +180,15 @@ end
 gameTab.MouseButton1Click:Connect(function()
 	switchTab("Games")
 end)
+
 miscTab.MouseButton1Click:Connect(function()
 	switchTab("Misc")
 end)
+
 settingsTab.MouseButton1Click:Connect(function()
 	switchTab("Settings")
 end)
 
--- Games Buttons
 local function addGameBtn(name, url)
 	local btn = Instance.new("TextButton", pages["Games"])
 	btn.Size = UDim2.new(0.9, 0, 0, 40)
@@ -209,13 +205,14 @@ local function addGameBtn(name, url)
 	end)
 end
 
+-- Games Buttons
 addGameBtn("99 Nights in the Forest", "https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua")
 addGameBtn("Steal a Brainrot", "https://raw.githubusercontent.com/Ninja10908/S4/refs/heads/main/Kurdhub")
 addGameBtn("Ink Game", "https://raw.githubusercontent.com/wefwef127382/inkgames.github.io/refs/heads/main/ringta.lua")
 addGameBtn("Murder Mystery 2", "https://raw.githubusercontent.com/mm2scripthub/TravHub/refs/heads/main/MurderMystery2")
-addGameBtn("Build a Boat", "https://raw.githubusercontent.com/novakoolhub/Script/main/Script/NovBoat.lua")
+addGameBtn("Bedwars", "https://raw.githubusercontent.com/VapeVoidware/vapevoidware/main/NewMainScript.lua")
+addGameBtn("Build a Boat", "https://raw.githubusercontent.com/nick7-hub/roblox/main/scripts/hub.lua")
 
--- Misc Buttons and Toggles
 local function makeToggle(name, callback)
 	local btn = Instance.new("TextButton", pages["Misc"])
 	btn.Size = UDim2.new(0.9, 0, 0, 35)
@@ -250,42 +247,51 @@ local function makeButton(name, callback)
 	return btn
 end
 
+-- Speed toggle
 makeToggle("Speed", function(on)
 	if plr.Character and plr.Character:FindFirstChild("Humanoid") then
 		plr.Character.Humanoid.WalkSpeed = on and 100 or 16
 	end
 end)
 
+-- High Jump toggle
 makeToggle("High Jump", function(on)
 	if plr.Character and plr.Character:FindFirstChild("Humanoid") then
 		plr.Character.Humanoid.JumpPower = on and 150 or 50
 	end
 end)
 
+-- Infinite Jump toggle
 local infJump = false
 makeToggle("Infinite Jump", function(state)
 	infJump = state
 end)
+
 UIS.JumpRequest:Connect(function()
 	if infJump and plr.Character and plr.Character:FindFirstChildOfClass("Humanoid") then
 		plr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
 	end
 end)
 
+-- Noclip toggle
 local noclipEnabled = false
+
 makeToggle("Noclip", function(state)
 	noclipEnabled = state
-end)
-RS.Stepped:Connect(function()
-	if noclipEnabled and plr.Character then
-		for _, part in pairs(plr.Character:GetDescendants()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = false
+	if noclipEnabled then
+		RS.Stepped:Connect(function()
+			if plr.Character then
+				for _, part in pairs(plr.Character:GetChildren()) do
+					if part:IsA("BasePart") then
+						part.CanCollide = false
+					end
+				end
 			end
-		end
+		end)
 	end
 end)
 
+-- Fly GUI (no ON/OFF text, just toggle script load)
 local flyScript
 local flyBtn = makeToggle("Fly GUI", function(on)
 	if on then
@@ -293,14 +299,18 @@ local flyBtn = makeToggle("Fly GUI", function(on)
 	else
 		if flyScript then
 			pcall(function()
-				flyScript:Destroy()
+				if typeof(flyScript) == "Instance" then
+					flyScript:Destroy()
+				end
 			end)
 			flyScript = nil
 		end
 	end
 end)
-flyBtn.Text = "Fly GUI" -- Remove ON/OFF text as requested
 
+flyBtn.Text = "Fly GUI" -- Remove ON/OFF text
+
+-- FPS Booster button (executes once on click)
 makeButton("FPS Booster", function()
 	_G.Settings = {
 		Players = {
@@ -328,15 +338,12 @@ makeButton("FPS Booster", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
 end)
 
-makeButton("Bedwars", function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/vapevoidware/main/NewMainScript.lua", true))()
-end)
-
+-- Infinite Yield button
 makeButton("Infinite Yield", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
 
--- SETTINGS Tab
+-- SETTINGS Tab --
 
 local bgColor = Color3.fromRGB(30, 30, 30)
 

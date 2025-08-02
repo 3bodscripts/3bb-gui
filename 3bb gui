@@ -1,3 +1,7 @@
+-- Full Script: 3BB GUI with Build a Boat, Bedwars, FPS Booster, Infinite Yield, and more
+
+if game.CoreGui:FindFirstChild("ThreeBMenu") then game.CoreGui:FindFirstChild("ThreeBMenu"):Destroy() end
+
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RS = game:GetService("RunService")
@@ -55,11 +59,14 @@ task.wait(0.3)
 
 loadingScreen:Destroy()
 
+-- ========== GUI SCRIPT STARTS HERE ==========
+
 local gui = Instance.new("ScreenGui")
 gui.Name = "ThreeBMenu"
 gui.ResetOnSpawn = false
 gui.Parent = game:GetService("CoreGui")
 
+-- Open GUI Button (draggable)
 local openButton = Instance.new("TextButton")
 openButton.Size = UDim2.new(0, 100, 0, 30)
 openButton.Position = UDim2.new(0, 10, 0.5, -15)
@@ -76,7 +83,7 @@ mainFrame.Size = UDim2.new(0, 320, 0, 400)
 mainFrame.Position = UDim2.new(0.5, -160, 0.5, -200)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.Visible = false
-mainFrame.Active = true
+mainFrame.Active = true -- Draggable
 mainFrame.Parent = gui
 
 local corner = Instance.new("UICorner", mainFrame)
@@ -84,11 +91,13 @@ corner.CornerRadius = UDim.new(0, 8)
 
 local function smoothDrag(obj)
 	local dragging, dragInput, dragStart, startPos
+
 	obj.InputBegan:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			dragging = true
 			dragStart = input.Position
 			startPos = obj.Position
+
 			input.Changed:Connect(function()
 				if input.UserInputState == Enum.UserInputState.End then
 					dragging = false
@@ -96,15 +105,22 @@ local function smoothDrag(obj)
 			end)
 		end
 	end)
+
 	obj.InputChanged:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 			dragInput = input
 		end
 	end)
+
 	RS.RenderStepped:Connect(function()
 		if dragging and dragInput then
 			local delta = dragInput.Position - dragStart
-			obj.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+			obj.Position = UDim2.new(
+				startPos.X.Scale,
+				startPos.X.Offset + delta.X,
+				startPos.Y.Scale,
+				startPos.Y.Offset + delta.Y
+			)
 		end
 	end)
 end
@@ -165,10 +181,18 @@ local function switchTab(name)
 		page.Visible = (tabName == name)
 	end
 end
-gameTab.MouseButton1Click:Connect(function() switchTab("Games") end)
-miscTab.MouseButton1Click:Connect(function() switchTab("Misc") end)
-settingsTab.MouseButton1Click:Connect(function() switchTab("Settings") end)
 
+gameTab.MouseButton1Click:Connect(function()
+	switchTab("Games")
+end)
+miscTab.MouseButton1Click:Connect(function()
+	switchTab("Misc")
+end)
+settingsTab.MouseButton1Click:Connect(function()
+	switchTab("Settings")
+end)
+
+-- Games Buttons
 local function addGameBtn(name, url)
 	local btn = Instance.new("TextButton", pages["Games"])
 	btn.Size = UDim2.new(0.9, 0, 0, 40)
@@ -189,8 +213,9 @@ addGameBtn("99 Nights in the Forest", "https://raw.githubusercontent.com/H4xScri
 addGameBtn("Steal a Brainrot", "https://raw.githubusercontent.com/Ninja10908/S4/refs/heads/main/Kurdhub")
 addGameBtn("Ink Game", "https://raw.githubusercontent.com/wefwef127382/inkgames.github.io/refs/heads/main/ringta.lua")
 addGameBtn("Murder Mystery 2", "https://raw.githubusercontent.com/mm2scripthub/TravHub/refs/heads/main/MurderMystery2")
-addGameBtn("Bedwars", "https://raw.githubusercontent.com/VapeVoidware/vapevoidware/main/NewMainScript.lua")
+addGameBtn("Build a Boat", "https://raw.githubusercontent.com/novakoolhub/Script/main/Script/NovBoat.lua")
 
+-- Misc Buttons and Toggles
 local function makeToggle(name, callback)
 	local btn = Instance.new("TextButton", pages["Misc"])
 	btn.Size = UDim2.new(0.9, 0, 0, 35)
@@ -241,7 +266,6 @@ local infJump = false
 makeToggle("Infinite Jump", function(state)
 	infJump = state
 end)
-
 UIS.JumpRequest:Connect(function()
 	if infJump and plr.Character and plr.Character:FindFirstChildOfClass("Humanoid") then
 		plr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
@@ -249,24 +273,14 @@ UIS.JumpRequest:Connect(function()
 end)
 
 local noclipEnabled = false
-makeToggle("NoClip", function(state)
+makeToggle("Noclip", function(state)
 	noclipEnabled = state
-	if noclipEnabled then
-		RS.Stepped:Connect(function()
-			if noclipEnabled and plr.Character then
-				for _, part in pairs(plr.Character:GetChildren()) do
-					if part:IsA("BasePart") then
-						part.CanCollide = false
-					end
-				end
-			end
-		end)
-	else
-		if plr.Character then
-			for _, part in pairs(plr.Character:GetChildren()) do
-				if part:IsA("BasePart") then
-					part.CanCollide = true
-				end
+end)
+RS.Stepped:Connect(function()
+	if noclipEnabled and plr.Character then
+		for _, part in pairs(plr.Character:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = false
 			end
 		end
 	end
@@ -285,10 +299,7 @@ local flyBtn = makeToggle("Fly GUI", function(on)
 		end
 	end
 end)
-flyBtn.Text = "Fly GUI"
-flyBtn.MouseButton1Click:Connect(function()
-	flyBtn.Text = "Fly GUI"
-end)
+flyBtn.Text = "Fly GUI" -- Remove ON/OFF text as requested
 
 makeButton("FPS Booster", function()
 	_G.Settings = {
@@ -317,9 +328,15 @@ makeButton("FPS Booster", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
 end)
 
+makeButton("Bedwars", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/vapevoidware/main/NewMainScript.lua", true))()
+end)
+
 makeButton("Infinite Yield", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
+
+-- SETTINGS Tab
 
 local bgColor = Color3.fromRGB(30, 30, 30)
 

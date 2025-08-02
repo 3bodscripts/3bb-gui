@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RS = game:GetService("RunService")
-local plr = Players.LocalPlayer
+local plr = Players.LocalPlayermmmmm
 
 -- Loading screen GUI
 local loadingScreen = Instance.new("ScreenGui", game.CoreGui)

@@ -64,7 +64,7 @@ gui.Parent = game:GetService("CoreGui")
 
 local openButton = Instance.new("TextButton")
 openButton.Size = UDim2.new(0, 100, 0, 30)
-openButton.Position = UDim2.new(0, 10, 0.5, -15)
+openButton.Position = UDim2.new(0, 10, 0.5, -115)  -- MOVED UP by 100 pixels
 openButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 openButton.TextColor3 = Color3.new(1, 1, 1)
 openButton.Font = Enum.Font.GothamBold
@@ -309,7 +309,7 @@ local flyBtn = makeToggle("Fly GUI", function(on)
 	end
 end)
 
-flyBtn.Text = "Fly GUI"
+flyBtn.Text = "Fly GUI" -- Remove ON/OFF text
 
 -- FPS Booster button (executes once on click)
 makeButton("FPS Booster", function()

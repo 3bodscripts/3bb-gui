@@ -43,10 +43,10 @@ local duration = 3
 local startTime = tick()
 
 while tick() - startTime < duration do
-	local elapsed = tick() - startTime
-	local progress = elapsed / duration
-	loadingBar.Size = UDim2.new(progress, 0, 1, 0)
-	task.wait()
+local elapsed = tick() - startTime
+local progress = elapsed / duration
+loadingBar.Size = UDim2.new(progress, 0, 1, 0)
+task.wait()
 end
 
 loadingBar.Size = UDim2.new(1, 0, 1, 0)
@@ -80,52 +80,109 @@ mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.Visible = false
 mainFrame.Active = true
 mainFrame.Parent = gui
+-- Confirmation UI
+local confirmGui = Instance.new("Frame", gui)
+confirmGui.Size = UDim2.new(0, 200, 0, 120)
+confirmGui.Position = UDim2.new(0.5, -100, 0.5, -60)
+confirmGui.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+confirmGui.BorderSizePixel = 0
+confirmGui.Visible = false
+
+local confirmText = Instance.new("TextLabel", confirmGui)
+confirmText.Size = UDim2.new(1, 0, 0.5, 0)
+confirmText.Position = UDim2.new(0, 0, 0, 0)
+confirmText.BackgroundTransparency = 1
+confirmText.Text = "Are you sure you want to close the GUI?"
+confirmText.TextColor3 = Color3.new(1,1,1)
+confirmText.TextScaled = true
+confirmText.Font = Enum.Font.Gotham
+
+local yesBtn = Instance.new("TextButton", confirmGui)
+yesBtn.Size = UDim2.new(0.45, 0, 0.3, 0)
+yesBtn.Position = UDim2.new(0.05, 0, 0.6, 0)
+yesBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+yesBtn.Text = "Yes"
+yesBtn.TextColor3 = Color3.new(1,1,1)
+yesBtn.Font = Enum.Font.GothamBold
+yesBtn.TextScaled = true
+
+local noBtn = Instance.new("TextButton", confirmGui)
+noBtn.Size = UDim2.new(0.45, 0, 0.3, 0)
+noBtn.Position = UDim2.new(0.5, 0, 0.6, 0)
+noBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+noBtn.Text = "No"
+noBtn.TextColor3 = Color3.new(1,1,1)
+noBtn.Font = Enum.Font.GothamBold
+noBtn.TextScaled = true
+
+-- Add X Button to top-right of mainFrame
+local closeBtn = Instance.new("TextButton", mainFrame)
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -30, 0, 5)
+closeBtn.BackgroundColor3 = Color3.fromRGB(170, 50, 50)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.TextSize = 14
+
+closeBtn.MouseButton1Click:Connect(function()
+	confirmGui.Visible = true
+end)
+
+yesBtn.MouseButton1Click:Connect(function()
+	gui:Destroy()
+end)
+
+noBtn.MouseButton1Click:Connect(function()
+	confirmGui.Visible = false
+end)
 
 local corner = Instance.new("UICorner", mainFrame)
 corner.CornerRadius = UDim.new(0, 8)
 
 local function smoothDrag(obj)
-	local dragging, dragInput, dragStart, startPos
+local dragging, dragInput, dragStart, startPos
 
-	obj.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			dragging = true
-			dragStart = input.Position
-			startPos = obj.Position
+obj.InputBegan:Connect(function(input)  
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then  
+		dragging = true  
+		dragStart = input.Position  
+		startPos = obj.Position  
 
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragging = false
-				end
-			end)
-		end
-	end)
+		input.Changed:Connect(function()  
+			if input.UserInputState == Enum.UserInputState.End then  
+				dragging = false  
+			end  
+		end)  
+	end  
+end)  
 
-	obj.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			dragInput = input
-		end
-	end)
+obj.InputChanged:Connect(function(input)  
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then  
+		dragInput = input  
+	end  
+end)  
 
-	RS.RenderStepped:Connect(function()
-		if dragging and dragInput then
-			local delta = dragInput.Position - dragStart
-			obj.Position = UDim2.new(
-				startPos.X.Scale,
-				startPos.X.Offset + delta.X,
-				startPos.Y.Scale,
-				startPos.Y.Offset + delta.Y
-			)
-		end
-	end)
+RS.RenderStepped:Connect(function()  
+	if dragging and dragInput then  
+		local delta = dragInput.Position - dragStart  
+		obj.Position = UDim2.new(  
+			startPos.X.Scale,  
+			startPos.X.Offset + delta.X,  
+			startPos.Y.Scale,  
+			startPos.Y.Offset + delta.Y  
+		)  
+	end  
+end)
+
 end
 
 smoothDrag(openButton)
 smoothDrag(mainFrame)
 
 openButton.MouseButton1Click:Connect(function()
-	mainFrame.Visible = not mainFrame.Visible
-	openButton.Text = mainFrame.Visible and "Close GUI" or "Open GUI"
+mainFrame.Visible = not mainFrame.Visible
+openButton.Text = mainFrame.Visible and "Close GUI" or "Open GUI"
 end)
 
 local title = Instance.new("TextLabel", mainFrame)
@@ -143,15 +200,15 @@ tabFrame.Position = UDim2.new(0, 0, 0, 30)
 tabFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 
 local function createTab(name, pos)
-	local tab = Instance.new("TextButton", tabFrame)
-	tab.Size = UDim2.new(0.33, 0, 1, 0)
-	tab.Position = UDim2.new(pos, 0, 0, 0)
-	tab.Text = name
-	tab.Font = Enum.Font.GothamSemibold
-	tab.TextSize = 16
-	tab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	tab.TextColor3 = Color3.new(1, 1, 1)
-	return tab
+local tab = Instance.new("TextButton", tabFrame)
+tab.Size = UDim2.new(0.33, 0, 1, 0)
+tab.Position = UDim2.new(pos, 0, 0, 0)
+tab.Text = name
+tab.Font = Enum.Font.GothamSemibold
+tab.TextSize = 16
+tab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+tab.TextColor3 = Color3.new(1, 1, 1)
+return tab
 end
 
 local gameTab = createTab("Games", 0)
@@ -160,49 +217,49 @@ local settingsTab = createTab("Settings", 0.66)
 
 local pages = {}
 for _, tabName in ipairs({"Games", "Misc", "Settings"}) do
-	local page = Instance.new("ScrollingFrame", mainFrame)
-	page.Name = tabName .. "Page"
-	page.Size = UDim2.new(1, 0, 1, -70)
-	page.Position = UDim2.new(0, 0, 0, 70)
-	page.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-	page.Visible = (tabName == "Games")
-	page.CanvasSize = UDim2.new(0, 0, 2, 0)
-	page.ScrollBarThickness = 6
-	pages[tabName] = page
+local page = Instance.new("ScrollingFrame", mainFrame)
+page.Name = tabName .. "Page"
+page.Size = UDim2.new(1, 0, 1, -70)
+page.Position = UDim2.new(0, 0, 0, 70)
+page.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+page.Visible = (tabName == "Games")
+page.CanvasSize = UDim2.new(0, 0, 2, 0)
+page.ScrollBarThickness = 6
+pages[tabName] = page
 end
 
 local function switchTab(name)
-	for tabName, page in pairs(pages) do
-		page.Visible = (tabName == name)
-	end
+for tabName, page in pairs(pages) do
+page.Visible = (tabName == name)
+end
 end
 
 gameTab.MouseButton1Click:Connect(function()
-	switchTab("Games")
+switchTab("Games")
 end)
 
 miscTab.MouseButton1Click:Connect(function()
-	switchTab("Misc")
+switchTab("Misc")
 end)
 
 settingsTab.MouseButton1Click:Connect(function()
-	switchTab("Settings")
+switchTab("Settings")
 end)
 
 local function addGameBtn(name, url)
-	local btn = Instance.new("TextButton", pages["Games"])
-	btn.Size = UDim2.new(0.9, 0, 0, 40)
-	btn.Position = UDim2.new(0.05, 0, 0, (#pages["Games"]:GetChildren() - 1) * 45)
-	btn.Text = name
-	btn.Font = Enum.Font.GothamSemibold
-	btn.TextSize = 16
-	btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	btn.TextColor3 = Color3.new(1, 1, 1)
-	Instance.new("UICorner", btn)
-	btn.MouseButton1Click:Connect(function()
-		gui:Destroy()
-		loadstring(game:HttpGet(url))()
-	end)
+local btn = Instance.new("TextButton", pages["Games"])
+btn.Size = UDim2.new(0.9, 0, 0, 40)
+btn.Position = UDim2.new(0.05, 0, 0, (#pages["Games"]:GetChildren() - 1) * 45)
+btn.Text = name
+btn.Font = Enum.Font.GothamSemibold
+btn.TextSize = 16
+btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+btn.TextColor3 = Color3.new(1, 1, 1)
+Instance.new("UICorner", btn)
+btn.MouseButton1Click:Connect(function()
+gui:Destroy()
+loadstring(game:HttpGet(url))()
+end)
 end
 
 -- Games Buttons
@@ -215,133 +272,134 @@ addGameBtn("Build a Boat", "https://raw.githubusercontent.com/nick7-hub/roblox/m
 addGameBtn("Rivals", "https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677")
 
 local function makeToggle(name, callback)
-	local btn = Instance.new("TextButton", pages["Misc"])
-	btn.Size = UDim2.new(0.9, 0, 0, 35)
-	btn.Position = UDim2.new(0.05, 0, 0, (#pages["Misc"]:GetChildren() - 1) * 40)
-	btn.Text = name .. " [OFF]"
-	btn.Font = Enum.Font.GothamSemibold
-	btn.TextSize = 14
-	btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-	btn.TextColor3 = Color3.new(1, 1, 1)
-	Instance.new("UICorner", btn)
+local btn = Instance.new("TextButton", pages["Misc"])
+btn.Size = UDim2.new(0.9, 0, 0, 35)
+btn.Position = UDim2.new(0.05, 0, 0, (#pages["Misc"]:GetChildren() - 1) * 40)
+btn.Text = name .. " [OFF]"
+btn.Font = Enum.Font.GothamSemibold
+btn.TextSize = 14
+btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+btn.TextColor3 = Color3.new(1, 1, 1)
+Instance.new("UICorner", btn)
 
-	local state = false
-	btn.MouseButton1Click:Connect(function()
-		state = not state
-		btn.Text = name .. (state and " [ON]" or " [OFF]")
-		callback(state)
-	end)
-	return btn
+local state = false  
+btn.MouseButton1Click:Connect(function()  
+	state = not state  
+	btn.Text = name .. (state and " [ON]" or " [OFF]")  
+	callback(state)  
+end)  
+return btn
+
 end
 
 local function makeButton(name, callback)
-	local btn = Instance.new("TextButton", pages["Misc"])
-	btn.Size = UDim2.new(0.9, 0, 0, 35)
-	btn.Position = UDim2.new(0.05, 0, 0, (#pages["Misc"]:GetChildren() - 1) * 40)
-	btn.Text = name
-	btn.Font = Enum.Font.GothamSemibold
-	btn.TextSize = 14
-	btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-	btn.TextColor3 = Color3.new(1, 1, 1)
-	Instance.new("UICorner", btn)
-	btn.MouseButton1Click:Connect(callback)
-	return btn
+local btn = Instance.new("TextButton", pages["Misc"])
+btn.Size = UDim2.new(0.9, 0, 0, 35)
+btn.Position = UDim2.new(0.05, 0, 0, (#pages["Misc"]:GetChildren() - 1) * 40)
+btn.Text = name
+btn.Font = Enum.Font.GothamSemibold
+btn.TextSize = 14
+btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+btn.TextColor3 = Color3.new(1, 1, 1)
+Instance.new("UICorner", btn)
+btn.MouseButton1Click:Connect(callback)
+return btn
 end
 
 -- Speed toggle
 makeToggle("Speed", function(on)
-	if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-		plr.Character.Humanoid.WalkSpeed = on and 100 or 16
-	end
+if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+plr.Character.Humanoid.WalkSpeed = on and 100 or 16
+end
 end)
 
 -- High Jump toggle
 makeToggle("High Jump", function(on)
-	if plr.Character and plr.Character:FindFirstChild("Humanoid") then
-		plr.Character.Humanoid.JumpPower = on and 150 or 50
-	end
+if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+plr.Character.Humanoid.JumpPower = on and 150 or 50
+end
 end)
 
 -- Infinite Jump toggle
 local infJump = false
 makeToggle("Infinite Jump", function(state)
-	infJump = state
+infJump = state
 end)
 
 UIS.JumpRequest:Connect(function()
-	if infJump and plr.Character and plr.Character:FindFirstChildOfClass("Humanoid") then
-		plr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
-	end
+if infJump and plr.Character and plr.Character:FindFirstChildOfClass("Humanoid") then
+plr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+end
 end)
 
 -- Noclip toggle
 local noclipEnabled = false
 
 makeToggle("Noclip", function(state)
-	noclipEnabled = state
-	if noclipEnabled then
-		RS.Stepped:Connect(function()
-			if plr.Character then
-				for _, part in pairs(plr.Character:GetChildren()) do
-					if part:IsA("BasePart") then
-						part.CanCollide = false
-					end
-				end
-			end
-		end)
-	end
+noclipEnabled = state
+if noclipEnabled then
+RS.Stepped:Connect(function()
+if plr.Character then
+for _, part in pairs(plr.Character:GetChildren()) do
+if part:IsA("BasePart") then
+part.CanCollide = false
+end
+end
+end
+end)
+end
 end)
 
 -- Fly GUI (no ON/OFF text, just toggle script load)
 local flyScript
 local flyBtn = makeToggle("Fly GUI", function(on)
-	if on then
-		flyScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
-	else
-		if flyScript then
-			pcall(function()
-				if typeof(flyScript) == "Instance" then
-					flyScript:Destroy()
-				end
-			end)
-			flyScript = nil
-		end
-	end
+if on then
+flyScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
+else
+if flyScript then
+pcall(function()
+if typeof(flyScript) == "Instance" then
+flyScript:Destroy()
+end
+end)
+flyScript = nil
+end
+end
 end)
 
 flyBtn.Text = "Fly GUI" -- Remove ON/OFF text
 
 -- FPS Booster button (executes once on click)
 makeButton("FPS Booster", function()
-	_G.Settings = {
-		Players = {
-			["Ignore Me"] = true,
-			["Ignore Others"] = true
-		},
-		Meshes = {
-			Destroy = false,
-			LowDetail = true
-		},
-		Images = {
-			Invisible = true,
-			LowDetail = false,
-			Destroy = false,
-		},
-		["No Particles"] = true,
-		["No Camera Effects"] = true,
-		["No Explosions"] = true,
-		["No Clothes"] = true,
-		["Low Water Graphics"] = true,
-		["No Shadows"] = true,
-		["Low Rendering"] = true,
-		["Low Quality Parts"] = true
-	}
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
+_G.Settings = {
+Players = {
+["Ignore Me"] = true,
+["Ignore Others"] = true
+},
+Meshes = {
+Destroy = false,
+LowDetail = true
+},
+Images = {
+Invisible = true,
+LowDetail = false,
+Destroy = false,
+},
+["No Particles"] = true,
+["No Camera Effects"] = true,
+["No Explosions"] = true,
+["No Clothes"] = true,
+["Low Water Graphics"] = true,
+["No Shadows"] = true,
+["Low Rendering"] = true,
+["Low Quality Parts"] = true
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
 end)
 
 -- Infinite Yield button
 makeButton("Infinite Yield", function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
 
 -- SETTINGS Tab --
@@ -349,88 +407,89 @@ end)
 local bgColor = Color3.fromRGB(30, 30, 30)
 
 local function applyBgColor(color)
-	for _, page in pairs(pages) do
-		page.BackgroundColor3 = color
-	end
+for _, page in pairs(pages) do
+page.BackgroundColor3 = color
+end
 end
 
 local settingY = 0
 local dropdown
 
 local function createSettingBtn(name, onClick)
-	local btn = Instance.new("TextButton", pages["Settings"])
-	btn.Size = UDim2.new(0.9, 0, 0, 30)
-	btn.Position = UDim2.new(0.05, 0, 0, settingY)
-	btn.Text = name
-	btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	btn.TextColor3 = Color3.new(1, 1, 1)
-	btn.Font = Enum.Font.Gotham
-	btn.TextSize = 14
-	settingY = settingY + 35
-	btn.MouseButton1Click:Connect(onClick)
-	return btn
+local btn = Instance.new("TextButton", pages["Settings"])
+btn.Size = UDim2.new(0.9, 0, 0, 30)
+btn.Position = UDim2.new(0.05, 0, 0, settingY)
+btn.Text = name
+btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+btn.TextColor3 = Color3.new(1, 1, 1)
+btn.Font = Enum.Font.Gotham
+btn.TextSize = 14
+settingY = settingY + 35
+btn.MouseButton1Click:Connect(onClick)
+return btn
 end
 
 local function clearDropdown()
-	if dropdown then
-		dropdown:Destroy()
-		dropdown = nil
-		settingY = settingY - 150
-	end
+if dropdown then
+dropdown:Destroy()
+dropdown = nil
+settingY = settingY - 150
+end
 end
 
 createSettingBtn("Background Color", function()
-	if dropdown then
-		clearDropdown()
-	else
-		dropdown = Instance.new("Frame", pages["Settings"])
-		dropdown.Size = UDim2.new(0.9, 0, 0, 150)
-		dropdown.Position = UDim2.new(0.05, 0, 0, settingY)
-		dropdown.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+if dropdown then
+clearDropdown()
+else
+dropdown = Instance.new("Frame", pages["Settings"])
+dropdown.Size = UDim2.new(0.9, 0, 0, 150)
+dropdown.Position = UDim2.new(0.05, 0, 0, settingY)
+dropdown.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 
-		local colors = {
-			Default = Color3.fromRGB(30, 30, 30),
-			Red = Color3.fromRGB(170, 50, 50),
-			Blue = Color3.fromRGB(50, 50, 170),
-			Green = Color3.fromRGB(50, 170, 50),
-		}
+local colors = {  
+		Default = Color3.fromRGB(30, 30, 30),  
+		Red = Color3.fromRGB(170, 50, 50),  
+		Blue = Color3.fromRGB(50, 50, 170),  
+		Green = Color3.fromRGB(50, 170, 50),  
+	}  
 
-		local yPos = 0
-		for name, color in pairs(colors) do
-			local colorBtn = Instance.new("TextButton", dropdown)
-			colorBtn.Size = UDim2.new(1, 0, 0, 30)
-			colorBtn.Position = UDim2.new(0, 0, 0, yPos)
-			colorBtn.Text = name
-			colorBtn.BackgroundColor3 = color
-			colorBtn.TextColor3 = Color3.new(1, 1, 1)
-			colorBtn.Font = Enum.Font.Gotham
-			colorBtn.TextSize = 14
-			colorBtn.MouseButton1Click:Connect(function()
-				applyBgColor(color)
-				bgColor = color
-				clearDropdown()
-			end)
-			yPos = yPos + 35
-		end
-		settingY = settingY + 150
-	end
+	local yPos = 0  
+	for name, color in pairs(colors) do  
+		local colorBtn = Instance.new("TextButton", dropdown)  
+		colorBtn.Size = UDim2.new(1, 0, 0, 30)  
+		colorBtn.Position = UDim2.new(0, 0, 0, yPos)  
+		colorBtn.Text = name  
+		colorBtn.BackgroundColor3 = color  
+		colorBtn.TextColor3 = Color3.new(1, 1, 1)  
+		colorBtn.Font = Enum.Font.Gotham  
+		colorBtn.TextSize = 14  
+		colorBtn.MouseButton1Click:Connect(function()  
+			applyBgColor(color)  
+			bgColor = color  
+			clearDropdown()  
+		end)  
+		yPos = yPos + 35  
+	end  
+	settingY = settingY + 150  
+end
+
 end)
 
 createSettingBtn("GUI Size: Small", function()
-	mainFrame.Size = UDim2.new(0, 250, 0, 300)
+mainFrame.Size = UDim2.new(0, 250, 0, 300)
 end)
 
 createSettingBtn("GUI Size: Medium", function()
-	mainFrame.Size = UDim2.new(0, 320, 0, 400)
+mainFrame.Size = UDim2.new(0, 320, 0, 400)
 end)
 
 createSettingBtn("GUI Size: Big", function()
-	mainFrame.Size = UDim2.new(0, 400, 0, 500)
+mainFrame.Size = UDim2.new(0, 400, 0, 500)
 end)
 
 createSettingBtn("Reset to Default", function()
-	mainFrame.Size = UDim2.new(0, 320, 0, 400)
-	applyBgColor(Color3.fromRGB(30, 30, 30))
+mainFrame.Size = UDim2.new(0, 320, 0, 400)
+applyBgColor(Color3.fromRGB(30, 30, 30))
 end)
 
 local madeBy = Instance.new("TextLabel", mainFrame)
@@ -442,4 +501,3 @@ madeBy.Font = Enum.Font.GothamSemibold
 madeBy.TextSize = 14
 madeBy.TextColor3 = Color3.fromRGB(180, 180, 180)
 madeBy.TextTransparency = 0.3
-

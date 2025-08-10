@@ -3,7 +3,7 @@ local UIS = game:GetService("UserInputService")
 local RS = game:GetService("RunService")
 local plr = Players.LocalPlayer
 
--- Loading screen GUI
+-- === Loading Screen ===
 local loadingScreen = Instance.new("ScreenGui", game.CoreGui)
 loadingScreen.IgnoreGuiInset = true
 loadingScreen.ResetOnSpawn = false
@@ -32,7 +32,6 @@ loadingBarBg.Position = UDim2.new(0.2, 0, 0.5, 0)
 loadingBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 loadingBarBg.BorderSizePixel = 0
 loadingBarBg.ClipsDescendants = true
-loadingBarBg.AnchorPoint = Vector2.new(0, 0)
 
 local loadingBar = Instance.new("Frame", loadingBarBg)
 loadingBar.Size = UDim2.new(0, 0, 1, 0)
@@ -43,21 +42,64 @@ local duration = 3
 local startTime = tick()
 
 while tick() - startTime < duration do
-local elapsed = tick() - startTime
-local progress = elapsed / duration
-loadingBar.Size = UDim2.new(progress, 0, 1, 0)
-task.wait()
+	local progress = (tick() - startTime) / duration
+	loadingBar.Size = UDim2.new(progress, 0, 1, 0)
+	task.wait()
 end
 
 loadingBar.Size = UDim2.new(1, 0, 1, 0)
-
 task.wait(0.3)
-
 loadingScreen:Destroy()
 
--- ========== GUI SCRIPT STARTS HERE ==========
+-- === Key System ===
+local keyGui = Instance.new("ScreenGui", game.CoreGui)
+keyGui.Name = "KeyGui"
+keyGui.ResetOnSpawn = false
 
-local gui = Instance.new("ScreenGui")
+local keyFrame = Instance.new("Frame", keyGui)
+keyFrame.Size = UDim2.new(0, 300, 0, 150)
+keyFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+keyFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+keyFrame.BorderSizePixel = 0
+Instance.new("UICorner", keyFrame).CornerRadius = UDim.new(0, 8)
+
+local prompt = Instance.new("TextLabel", keyFrame)
+prompt.Size = UDim2.new(1, 0, 0, 40)
+prompt.Position = UDim2.new(0, 0, 0, 10)
+prompt.BackgroundTransparency = 1
+prompt.Text = "Please enter your key"
+prompt.TextColor3 = Color3.new(1, 1, 1)
+prompt.Font = Enum.Font.GothamBold
+prompt.TextScaled = true
+
+local keyBox = Instance.new("TextBox", keyFrame)
+keyBox.Size = UDim2.new(0.8, 0, 0, 40)
+keyBox.Position = UDim2.new(0.1, 0, 0, 65)
+keyBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+keyBox.TextColor3 = Color3.new(1, 1, 1)
+keyBox.Font = Enum.Font.Gotham
+keyBox.TextSize = 18
+keyBox.Text = "Enter Key"
+keyBox.ClearTextOnFocus = false
+Instance.new("UICorner", keyBox).CornerRadius = UDim.new(0, 6)
+
+local clicked = false
+keyBox.Focused:Connect(function()
+	if not clicked then
+		keyBox.Text = ""
+		clicked = true
+	end
+end)
+
+-- === Function to show main GUI ===
+local function showMainGUI()
+	keyGui:Destroy()
+
+	local gui = Instance.new("ScreenGui", game.CoreGui)
+	gui.Name = "ThreeBMenu"
+	gui.ResetOnSpawn = false
+
+	-- local gui = Instance.new("ScreenGui")
 gui.Name = "ThreeBMenu"
 gui.ResetOnSpawn = false
 gui.Parent = game:GetService("CoreGui")
@@ -501,3 +543,44 @@ madeBy.Font = Enum.Font.GothamSemibold
 madeBy.TextSize = 14
 madeBy.TextColor3 = Color3.fromRGB(180, 180, 180)
 madeBy.TextTransparency = 0.3
+end
+
+-- === Submit Button ===
+local submitBtn = Instance.new("TextButton", keyFrame)
+submitBtn.Size = UDim2.new(0.5, 0, 0, 35)
+submitBtn.Position = UDim2.new(0.25, 0, 0, 110)
+submitBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+submitBtn.TextColor3 = Color3.new(1, 1, 1)
+submitBtn.Font = Enum.Font.GothamBold
+submitBtn.TextSize = 18
+submitBtn.Text = "Submit"
+Instance.new("UICorner", submitBtn).CornerRadius = UDim.new(0, 6)
+
+local function trim(s)
+    return s:match("^%s*(.-)%s*$")
+end
+
+local function checkKey()
+    local correctKey = "3bbgui6655"
+    local inputKey = trim(keyBox.Text or "")
+
+    if inputKey == correctKey then
+        submitBtn.Text = "Correct key! Loading script..."
+        submitBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+        submitBtn.Active = false
+        task.wait(3)
+        showMainGUI()
+    else
+        keyBox.Text = "Wrong Key!"
+        clicked = false
+    end
+end
+
+keyBox.FocusLost:Connect(function(enterPressed)
+	if keyBox.Text == "" then
+		keyBox.Text = "Enter Key"
+		clicked = false
+	end
+end)
+
+submitBtn.MouseButton1Click:Connect(checkKey)

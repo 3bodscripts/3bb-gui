@@ -1,3 +1,38 @@
+local ScreenGuiIntro = Instance.new("ScreenGui")
+ScreenGuiIntro.IgnoreGuiInset = true
+ScreenGuiIntro.ResetOnSpawn = false
+ScreenGuiIntro.Parent = game.CoreGui
+
+local IntroLabel = Instance.new("TextLabel")
+IntroLabel.Size = UDim2.new(1, 0, 1, 0)
+IntroLabel.BackgroundTransparency = 1
+IntroLabel.TextColor3 = Color3.fromRGB(200,100,255)
+IntroLabel.Text = ""
+IntroLabel.Font = Enum.Font.Highway
+IntroLabel.TextSize = 36
+IntroLabel.TextTransparency = 0
+IntroLabel.Parent = ScreenGuiIntro
+
+-- Center text
+IntroLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+IntroLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+
+-- Typing effect
+local textToType = "Made by 3bb"
+for i = 1, #textToType do
+	IntroLabel.Text = string.sub(textToType, 1, i)
+	task.wait(0.1)
+end
+
+-- Fade out
+for i = 0, 1, 0.05 do
+	IntroLabel.TextTransparency = i
+	task.wait(0.05)
+end
+
+ScreenGuiIntro:Destroy()
+
+--// Main GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "333Hub"
 ScreenGui.Parent = game.CoreGui
@@ -47,20 +82,20 @@ WindowsFrame.BackgroundTransparency = 1
 WindowsFrame.Parent = MainFrame
 
 local function createWindow(name)
-    local win = Instance.new("Frame")
-    win.Size = UDim2.new(1,0,1,0)
-    win.Position = UDim2.new(0,0,0,0)
-    win.BackgroundTransparency = 1
-    win.Visible = false
-    win.Name = name
-    win.Parent = WindowsFrame
+	local win = Instance.new("Frame")
+	win.Size = UDim2.new(1,0,1,0)
+	win.Position = UDim2.new(0,0,0,0)
+	win.BackgroundTransparency = 1
+	win.Visible = false
+	win.Name = name
+	win.Parent = WindowsFrame
 
-    local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0,5)
-    layout.FillDirection = Enum.FillDirection.Vertical
-    layout.Parent = win
+	local layout = Instance.new("UIListLayout")
+	layout.Padding = UDim.new(0,5)
+	layout.FillDirection = Enum.FillDirection.Vertical
+	layout.Parent = win
 
-    return win
+	return win
 end
 
 local GamesWindow = createWindow("Games")
@@ -68,20 +103,20 @@ local PlatformWindow = createWindow("Platform")
 local SettingsWindow = createWindow("Settings")
 
 local function createButton(parent)
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1,0,0,40)
-    btn.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    btn.BackgroundTransparency = 0.6
-    btn.TextColor3 = Color3.fromRGB(50,50,50)
-    btn.Text = "example"
-    btn.Font = Enum.Font.Highway
-    btn.TextSize = 20
-    btn.Parent = parent
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0,10)
-    corner.Parent = btn
-    btn.MouseEnter:Connect(function() btn.BackgroundTransparency = 0.3 end)
-    btn.MouseLeave:Connect(function() btn.BackgroundTransparency = 0.6 end)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(1,0,0,40)
+	btn.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	btn.BackgroundTransparency = 0.6
+	btn.TextColor3 = Color3.fromRGB(50,50,50)
+	btn.Text = "example"
+	btn.Font = Enum.Font.Highway
+	btn.TextSize = 20
+	btn.Parent = parent
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0,10)
+	corner.Parent = btn
+	btn.MouseEnter:Connect(function() btn.BackgroundTransparency = 0.3 end)
+	btn.MouseLeave:Connect(function() btn.BackgroundTransparency = 0.6 end)
 end
 
 createButton(GamesWindow)
@@ -90,36 +125,35 @@ createButton(SettingsWindow)
 
 local tabIndex = 0
 local function createTab(window)
-    tabIndex = tabIndex + 1
-    local tab = Instance.new("TextButton")
-    tab.Size = UDim2.new(0, 120, 1, 0)
-    tab.Position = UDim2.new(0, (tabIndex-1)*125, 0, 0)
-    tab.BackgroundColor3 = Color3.fromRGB(255,255,255)
-    tab.BackgroundTransparency = 0.6
-    tab.TextColor3 = Color3.fromRGB(50,50,50)
-    tab.Text = "example"
-    tab.Font = Enum.Font.Highway
-    tab.TextSize = 20
-    tab.Parent = TabsFrame
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0,10)
-    corner.Parent = tab
+	tabIndex = tabIndex + 1
+	local tab = Instance.new("TextButton")
+	tab.Size = UDim2.new(0, 120, 1, 0)
+	tab.Position = UDim2.new(0, (tabIndex-1)*125, 0, 0)
+	tab.BackgroundColor3 = Color3.fromRGB(255,255,255)
+	tab.BackgroundTransparency = 0.6
+	tab.TextColor3 = Color3.fromRGB(50,50,50)
+	tab.Text = "example"
+	tab.Font = Enum.Font.Highway
+	tab.TextSize = 20
+	tab.Parent = TabsFrame
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0,10)
+	corner.Parent = tab
 
-    tab.MouseButton1Click:Connect(function()
-        for _, w in ipairs(WindowsFrame:GetChildren()) do
-            if w:IsA("Frame") then w.Visible = false end
-        end
-        window.Visible = true
-    end)
+	tab.MouseButton1Click:Connect(function()
+		for _, w in ipairs(WindowsFrame:GetChildren()) do
+			if w:IsA("Frame") then w.Visible = false end
+		end
+		window.Visible = true
+	end)
 
-    tab.MouseEnter:Connect(function() tab.BackgroundTransparency = 0.3 end)
-    tab.MouseLeave:Connect(function() tab.BackgroundTransparency = 0.6 end)
+	tab.MouseEnter:Connect(function() tab.BackgroundTransparency = 0.3 end)
+	tab.MouseLeave:Connect(function() tab.BackgroundTransparency = 0.6 end)
 end
 
 createTab(GamesWindow)
 createTab(PlatformWindow)
 createTab(SettingsWindow)
-
 GamesWindow.Visible = true
 
 local ToggleBtn = Instance.new("TextButton")
@@ -137,7 +171,6 @@ local UICorner2 = Instance.new("UICorner")
 UICorner2.CornerRadius = UDim.new(0, 8)
 UICorner2.Parent = ToggleBtn
 
--- Smooth drag
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
@@ -145,45 +178,36 @@ local dragging = false
 local dragInput, dragStart, startPos
 
 local function update(input)
-    local delta = input.Position - dragStart
-    local targetPos = UDim2.new(
-        0, startPos.X.Offset + delta.X,
-        0, startPos.Y.Offset + delta.Y
-    )
-    ToggleBtn.Position = ToggleBtn.Position:Lerp(targetPos, 0.2)
+	local delta = input.Position - dragStart
+	local targetPos = UDim2.new(0, startPos.X.Offset + delta.X, 0, startPos.Y.Offset + delta.Y)
+	ToggleBtn.Position = ToggleBtn.Position:Lerp(targetPos, 0.2)
 end
 
 ToggleBtn.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = ToggleBtn.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = ToggleBtn.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
 end)
 
 ToggleBtn.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
 end)
 
 RunService.RenderStepped:Connect(function()
-    if dragging and dragInput then
-        update(dragInput)
-    end
+	if dragging and dragInput then
+		update(dragInput)
+	end
 end)
 
 ToggleBtn.MouseButton1Click:Connect(function()
-    local mainGui = game.CoreGui:FindFirstChild("333Hub")
-    if mainGui then
-        local mainFrame = mainGui:FindFirstChild("MainFrame", true)
-        if mainFrame then
-            mainFrame.Visible = not mainFrame.Visible
-        end
-    end
+	MainFrame.Visible = not MainFrame.Visible
 end)

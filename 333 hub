@@ -1,7 +1,9 @@
+-- 333 Hub - Full GUI with Tabs & Smooth Draggable 333 Square
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "333Hub"
 ScreenGui.Parent = game.CoreGui
 
+-- Main GUI frame
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 400, 0, 320)
@@ -10,13 +12,14 @@ MainFrame.BackgroundColor3 = Color3.fromRGB(255,255,255)
 MainFrame.BackgroundTransparency = 0.7
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
-MainFrame.Draggable = true
+MainFrame.Draggable = true -- PC drag
 MainFrame.Parent = ScreenGui
 
 local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 15)
 UICorner.Parent = MainFrame
 
+-- Title
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1,0,0,50)
 Title.Position = UDim2.new(0,0,0,0)
@@ -27,12 +30,14 @@ Title.TextSize = 28
 Title.TextColor3 = Color3.fromRGB(200,100,255)
 Title.Parent = MainFrame
 
+-- Tabs container
 local TabsFrame = Instance.new("Frame")
 TabsFrame.Size = UDim2.new(1,-20,0,40)
 TabsFrame.Position = UDim2.new(0,10,0,50)
 TabsFrame.BackgroundTransparency = 1
 TabsFrame.Parent = MainFrame
 
+-- Line under tabs
 local TabLine = Instance.new("Frame")
 TabLine.Size = UDim2.new(1,0,0,2)
 TabLine.Position = UDim2.new(0,0,0,40)
@@ -40,12 +45,14 @@ TabLine.BackgroundColor3 = Color3.fromRGB(200,100,255)
 TabLine.BorderSizePixel = 0
 TabLine.Parent = TabsFrame
 
+-- Window container
 local WindowsFrame = Instance.new("Frame")
 WindowsFrame.Size = UDim2.new(1,-20,1,-100)
 WindowsFrame.Position = UDim2.new(0,10,0,90)
 WindowsFrame.BackgroundTransparency = 1
 WindowsFrame.Parent = MainFrame
 
+-- Create windows
 local function createWindow(name)
     local win = Instance.new("Frame")
     win.Size = UDim2.new(1,0,1,0)
@@ -67,13 +74,14 @@ local GamesWindow = createWindow("Games")
 local PlatformWindow = createWindow("Platform")
 local SettingsWindow = createWindow("Settings")
 
-local function createButton(parent)
+-- Example buttons
+local function createButton(parent, name)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1,0,0,40)
     btn.BackgroundColor3 = Color3.fromRGB(255,255,255)
     btn.BackgroundTransparency = 0.6
     btn.TextColor3 = Color3.fromRGB(50,50,50)
-    btn.Text = "example"
+    btn.Text = name
     btn.Font = Enum.Font.Highway
     btn.TextSize = 20
     btn.Parent = parent
@@ -84,12 +92,14 @@ local function createButton(parent)
     btn.MouseLeave:Connect(function() btn.BackgroundTransparency = 0.6 end)
 end
 
-createButton(GamesWindow)
-createButton(PlatformWindow)
-createButton(SettingsWindow)
+-- Add sample buttons
+createButton(GamesWindow, "Steal Object")
+createButton(PlatformWindow, "Platform Toggle")
+createButton(SettingsWindow, "Change GUI Color")
 
+-- Tabs buttons
 local tabIndex = 0
-local function createTab(window)
+local function createTab(name, window)
     tabIndex = tabIndex + 1
     local tab = Instance.new("TextButton")
     tab.Size = UDim2.new(0, 120, 1, 0)
@@ -97,7 +107,7 @@ local function createTab(window)
     tab.BackgroundColor3 = Color3.fromRGB(255,255,255)
     tab.BackgroundTransparency = 0.6
     tab.TextColor3 = Color3.fromRGB(50,50,50)
-    tab.Text = "example"
+    tab.Text = name
     tab.Font = Enum.Font.Highway
     tab.TextSize = 20
     tab.Parent = TabsFrame
@@ -116,12 +126,14 @@ local function createTab(window)
     tab.MouseLeave:Connect(function() tab.BackgroundTransparency = 0.6 end)
 end
 
-createTab(GamesWindow)
-createTab(PlatformWindow)
-createTab(SettingsWindow)
+createTab("Games", GamesWindow)
+createTab("Platform", PlatformWindow)
+createTab("Settings", SettingsWindow)
 
+-- Show default tab
 GamesWindow.Visible = true
 
+-- Small draggable 333 toggle square
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
 ToggleBtn.Position = UDim2.new(0, 20, 0.5, -25)
@@ -137,12 +149,12 @@ local UICorner2 = Instance.new("UICorner")
 UICorner2.CornerRadius = UDim.new(0, 8)
 UICorner2.Parent = ToggleBtn
 
+-- Smooth cross-platform drag
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 local dragging = false
 local dragInput, dragStart, startPos
-local moved = false
 
 local function update(input)
     local delta = input.Position - dragStart
@@ -150,15 +162,13 @@ local function update(input)
         0, startPos.X.Offset + delta.X,
         0, startPos.Y.Offset + delta.Y
     )
+    -- Smooth movement using Lerp
     ToggleBtn.Position = ToggleBtn.Position:Lerp(targetPos, 0.2)
-    moved = true
 end
 
--- Detect both mouse and touch properly
 ToggleBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
-        moved = false
         dragStart = input.Position
         startPos = ToggleBtn.Position
 
@@ -182,8 +192,7 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
+-- Toggle visibility of the main GUI
 ToggleBtn.MouseButton1Click:Connect(function()
-    if not moved then
-        MainFrame.Visible = not MainFrame.Visible
-    end
+    MainFrame.Visible = not MainFrame.Visible
 end)

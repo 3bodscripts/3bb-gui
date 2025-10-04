@@ -84,7 +84,6 @@ local function createButton(parent)
     btn.MouseLeave:Connect(function() btn.BackgroundTransparency = 0.6 end)
 end
 
--- Add example buttons
 createButton(GamesWindow)
 createButton(PlatformWindow)
 createButton(SettingsWindow)
@@ -180,5 +179,11 @@ RunService.RenderStepped:Connect(function()
 end)
 
 ToggleBtn.MouseButton1Click:Connect(function()
-    MainFrame.Visible = not MainFrame.Visible
+    local mainGui = game.CoreGui:FindFirstChild("333Hub")
+    if mainGui then
+        local mainFrame = mainGui:FindFirstChild("MainFrame", true)
+        if mainFrame then
+            mainFrame.Visible = not mainFrame.Visible
+        end
+    end
 end)

@@ -1,0 +1,124 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Prime hub",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "prime hub",
+   LoadingSubtitle = "by 3bb",
+   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
+   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "prime hub | Key",
+      Subtitle = "Key System",
+      Note = "key is on the link", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"https://pastebin.com/raw/UHVMLAWG"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MainTab = Window:CreateTab("🏠home", nil) -- Title, Image
+local MainSection = MainTab:CreateSection("Games")
+
+local Button = MainTab:CreateButton({
+   Name = "99 nights in the forest",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()
+      Rayfield:Notify({
+   Title = "successfully executed",
+   Content = "99 nights in the forest",
+   Duration = 2.5,
+   Image = nil,
+})
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+
+local Button = MainTab:CreateButton({
+   Name = "Steal A Brainrot",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/Ninja10908/S4/refs/heads/main/Kurdhub"))()
+   -- The function that takes place when the button is pressed
+      Rayfield:Notify({
+   Title = "successfully executed",
+   Content = "Steal A Brainrot",
+   Duration = 2.5,
+   Image = nil,
+})
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Build a boat",
+   Callback = function()
+       loadstring(game:HttpGet(("https://raw.githubusercontent.com/catblox1346/StensUIReMake/refs/heads/main/Script/boatbuilderhub_B1"),true))()
+      Rayfield:Notify({
+   Title = "successfully executed",
+   Content = "Build a boat",
+   Duration = 2.5,
+   Image = nil,
+})
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Bedwars",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VWRewrite/main/NewMainScript.lua", true))()
+      Rayfield:Notify({
+   Title = "successfully executed",
+   Content = "Bedwars",
+   Duration = 2.5,
+   Image = nil,
+})
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Murder Vs Sherrif Duel",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/TheRealAvrwm/Zephyr-V2/refs/heads/main/ZephyrV2", true))()
+      Rayfield:Notify({
+   Title = "successfully executed",
+   Content = "Murder Vs Sherrif Duel",
+   Duration = 2.5,
+   Image = nil,
+})
+   end,
+})         
+      
+local Button = MainTab:CreateButton({
+   Name = "Murder Vs Sherrif Duel farm",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/TheRealAvrwm/Projects/refs/heads/main/Autofarm%20Beta", true))()
+      Rayfield:Notify({
+   Title = "successfully executed",
+   Content = "Murder Vs Sherrif Duel farm",
+   Duration = 2.5,
+         Image = nil,
+})
+   end,
+})         

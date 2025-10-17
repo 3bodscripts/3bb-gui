@@ -1,124 +1,285 @@
+-- Load Rayfield
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Prime hub",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   Name = "Prime Hub",
+   Icon = 0,
    LoadingTitle = "prime hub",
    LoadingSubtitle = "by 3bb",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
-
-   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
-
+   ShowText = "Rayfield",
+   Theme = "Default",
+   ToggleUIKeybind = "K",
    DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+   DisableBuildWarnings = false,
 
    ConfigurationSaving = {
       Enabled = false,
-      FolderName = nil, -- Create a custom folder for your hub/game
+      FolderName = nil,
       FileName = "Big Hub"
    },
 
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
    },
 
-   KeySystem = true, -- Set this to true to use our key system
+   KeySystem = true,
    KeySettings = {
       Title = "prime hub | Key",
       Subtitle = "Key System",
-      Note = "key is on the link", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"https://pastebin.com/raw/UHVMLAWG"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+      Note = "key is on the link",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = true,
+      Key = {"https://pastebin.com/raw/UHVMLAWG"}
    }
 })
 
-local MainTab = Window:CreateTab("🏠home", nil) -- Title, Image
-local MainSection = MainTab:CreateSection("Games")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
 
-local Button = MainTab:CreateButton({
-   Name = "99 nights in the forest",
-   Callback = function()
-       loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()
-      Rayfield:Notify({
-   Title = "successfully executed",
-   Content = "99 nights in the forest",
-   Duration = 2.5,
-   Image = nil,
-})
-   -- The function that takes place when the button is pressed
-   end,
-})
+-- =======================
+-- 🏠 GAMES TAB
+-- =======================
+local GamesTab = Window:CreateTab("🏠 Games", nil)
+local function CreateGameButton(tab, name, url)
+   tab:CreateButton({
+      Name = name,
+      Callback = function()
+         loadstring(game:HttpGet(url, true))()
+         Rayfield:Notify({Title="Executed", Content=name, Duration=2.5})
+      end,
+   })
+end
 
+CreateGameButton(GamesTab, "99 Nights in the Forest", "https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua")
+CreateGameButton(GamesTab, "Steal A Brainrot", "https://raw.githubusercontent.com/Ninja10908/S4/refs/heads/main/Kurdhub")
+CreateGameButton(GamesTab, "Build a Boat", "https://raw.githubusercontent.com/catblox1346/StensUIReMake/refs/heads/main/Script/boatbuilderhub_B1")
+CreateGameButton(GamesTab, "Bedwars", "https://raw.githubusercontent.com/VapeVoidware/VWRewrite/main/NewMainScript.lua")
+CreateGameButton(GamesTab, "Murder Vs Sheriff Duel", "https://raw.githubusercontent.com/TheRealAvrwm/Zephyr-V2/refs/heads/main/ZephyrV2")
+CreateGameButton(GamesTab, "Murder Vs Sheriff Duel Farm", "https://raw.githubusercontent.com/TheRealAvrwm/Projects/refs/heads/main/Autofarm%20Beta")
 
-local Button = MainTab:CreateButton({
-   Name = "Steal A Brainrot",
-   Callback = function()
-       loadstring(game:HttpGet("https://raw.githubusercontent.com/Ninja10908/S4/refs/heads/main/Kurdhub"))()
-   -- The function that takes place when the button is pressed
-      Rayfield:Notify({
-   Title = "successfully executed",
-   Content = "Steal A Brainrot",
-   Duration = 2.5,
-   Image = nil,
-})
-   end,
-})
+-- =======================
+-- ⚙️ MISC TAB
+-- =======================
+local MiscTab = Window:CreateTab("⚙️ Misc", nil)
+local infJumpConnection
+local noclipConnection
 
-local Button = MainTab:CreateButton({
-   Name = "Build a boat",
-   Callback = function()
-       loadstring(game:HttpGet(("https://raw.githubusercontent.com/catblox1346/StensUIReMake/refs/heads/main/Script/boatbuilderhub_B1"),true))()
-      Rayfield:Notify({
-   Title = "successfully executed",
-   Content = "Build a boat",
-   Duration = 2.5,
-   Image = nil,
+-- Walkspeed
+MiscTab:CreateSlider({
+    Name = "Walkspeed",
+    Range = {16, 300},
+    Increment = 1,
+    CurrentValue = 16,
+    Suffix = "Speed",
+    Callback = function(val)
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = val
+        end
+    end
 })
-   -- The function that takes place when the button is pressed
-   end,
-})
-
-local Button = MainTab:CreateButton({
-   Name = "Bedwars",
-   Callback = function()
-       loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VWRewrite/main/NewMainScript.lua", true))()
-      Rayfield:Notify({
-   Title = "successfully executed",
-   Content = "Bedwars",
-   Duration = 2.5,
-   Image = nil,
-})
-   -- The function that takes place when the button is pressed
-   end,
+MiscTab:CreateButton({
+    Name = "Reset Walkspeed",
+    Callback = function()
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = 16
+        end
+        Rayfield:Notify({Title="Walkspeed", Content="Reset ✅", Duration=2})
+    end
 })
 
-local Button = MainTab:CreateButton({
-   Name = "Murder Vs Sherrif Duel",
-   Callback = function()
-       loadstring(game:HttpGet("https://raw.githubusercontent.com/TheRealAvrwm/Zephyr-V2/refs/heads/main/ZephyrV2", true))()
-      Rayfield:Notify({
-   Title = "successfully executed",
-   Content = "Murder Vs Sherrif Duel",
-   Duration = 2.5,
-   Image = nil,
+-- JumpPower
+MiscTab:CreateSlider({
+    Name = "JumpPower",
+    Range = {50, 400},
+    Increment = 1,
+    CurrentValue = 50,
+    Suffix = "Jump",
+    Callback = function(val)
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid").JumpPower = val
+        end
+    end
 })
-   end,
-})         
-      
-local Button = MainTab:CreateButton({
-   Name = "Murder Vs Sherrif Duel farm",
-   Callback = function()
-       loadstring(game:HttpGet("https://raw.githubusercontent.com/TheRealAvrwm/Projects/refs/heads/main/Autofarm%20Beta", true))()
-      Rayfield:Notify({
-   Title = "successfully executed",
-   Content = "Murder Vs Sherrif Duel farm",
-   Duration = 2.5,
-         Image = nil,
+MiscTab:CreateButton({
+    Name = "Reset JumpPower",
+    Callback = function()
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid").JumpPower = 50
+        end
+        Rayfield:Notify({Title="JumpPower", Content="Reset ✅", Duration=2})
+    end
 })
-   end,
-}) 
+
+-- Infinite Jump toggle
+MiscTab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Callback = function(enabled)
+        if enabled then
+            Rayfield:Notify({Title="Infinite Jump", Content="Enabled ✅", Duration=2})
+            infJumpConnection = UIS.JumpRequest:Connect(function()
+                if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                    LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        else
+            Rayfield:Notify({Title="Infinite Jump", Content="Disabled ❌", Duration=2})
+            if infJumpConnection then infJumpConnection:Disconnect() infJumpConnection=nil end
+        end
+    end
+})
+
+-- Noclip toggle
+MiscTab:CreateToggle({
+   Name = "Noclip",
+   CurrentValue = false,
+   Callback = function(Value)
+      if Value then
+         noclipConnection = RunService.Stepped:Connect(function()
+            if LocalPlayer.Character then
+               for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                  if part:IsA("BasePart") then
+                     part.CanCollide = false
+                  end
+               end
+            end
+         end)
+         Rayfield:Notify({Title="Noclip", Content="Enabled ✅", Duration=2})
+      else
+         if noclipConnection then noclipConnection:Disconnect() noclipConnection=nil end
+         Rayfield:Notify({Title="Noclip", Content="Disabled ❌", Duration=2})
+      end
+   end
+})
+
+-- =======================
+-- ✨ ESP TAB (LAST)
+-- =======================
+local ESPTab = Window:CreateTab("ESP", nil)
+
+local boxes, espHighlights, tracers, names = {}, {}, {}, {}
+local boxEnabled, espEnabled, tracerEnabled, nameEnabled = false, false, false, false
+
+-- Helper
+local function getColor(plr)
+    if plr.Team ~= LocalPlayer.Team then
+        return Color3.fromRGB(255,0,0)
+    else
+        return Color3.fromRGB(0,255,0)
+    end
+end
+
+-- BOX ESP
+local function updateBoxes()
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+            if not boxes[plr] then
+                local box = Drawing.new("Square")
+                box.Visible = false
+                box.Thickness = 2
+                box.Filled = false
+                box.Color = getColor(plr)
+                boxes[plr] = box
+            end
+            local box = boxes[plr]
+            local pos, onScreen = Camera:WorldToViewportPoint(plr.Character.HumanoidRootPart.Position)
+            if onScreen and boxEnabled then
+                local size = 1000 / math.clamp(pos.Z,0.1,1000)
+                box.Size = Vector2.new(size,size)
+                box.Position = Vector2.new(pos.X-size/2,pos.Y-size/2)
+                box.Visible = true
+            else
+                box.Visible = false
+            end
+        end
+    end
+end
+
+-- HIGHLIGHT ESP
+local function updateESP()
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and plr.Character then
+            if espEnabled and not espHighlights[plr] then
+                local highlight = Instance.new("Highlight")
+                highlight.Name = "ESP_Highlight"
+                highlight.Adornee = plr.Character
+                highlight.FillColor = getColor(plr)
+                highlight.FillTransparency = 0.5
+                highlight.OutlineTransparency = 0
+                highlight.Parent = game:GetService("CoreGui")
+                espHighlights[plr] = highlight
+            elseif not espEnabled and espHighlights[plr] then
+                espHighlights[plr]:Destroy()
+                espHighlights[plr] = nil
+            end
+        end
+    end
+end
+
+-- TRACERS
+local function updateTracers()
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+            if tracerEnabled and not tracers[plr] then
+                local att0 = Instance.new("Attachment", LocalPlayer.Character.HumanoidRootPart)
+                local att1 = Instance.new("Attachment", plr.Character.HumanoidRootPart)
+                local beam = Instance.new("Beam")
+                beam.Attachment0 = att0
+                beam.Attachment1 = att1
+                beam.Color = ColorSequence.new(getColor(plr))
+                beam.Width0 = 0.05
+                beam.Width1 = 0.05
+                beam.FaceCamera = true
+                beam.Parent = workspace
+                tracers[plr] = {beam=beam, att0=att0, att1=att1}
+            elseif not tracerEnabled and tracers[plr] then
+                local data = tracers[plr]
+                data.beam:Destroy()
+                data.att0:Destroy()
+                data.att1:Destroy()
+                tracers[plr] = nil
+            end
+        end
+    end
+end
+
+-- NAMES
+local function updateNames()
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+            if not names[plr] then
+                local text = Drawing.new("Text")
+                text.Size = 14
+                text.Center = true
+                text.Outline = true
+                text.Color = getColor(plr)
+                names[plr] = text
+            end
+            local text = names[plr]
+            local pos, onScreen = Camera:WorldToViewportPoint(plr.Character.HumanoidRootPart.Position + Vector3.new(0,3,0))
+            text.Text = plr.Name
+            text.Visible = onScreen and nameEnabled
+            text.Position = Vector2.new(pos.X,pos.Y)
+        end
+    end
+end
+
+-- Render Loop
+RunService.RenderStepped:Connect(function()
+    updateBoxes()
+    updateESP()
+    updateTracers()
+    updateNames()
+end)
+
+-- ESP GUI Toggles
+ESPTab:CreateToggle({Name="Box ESP", CurrentValue=false, Callback=function(val) boxEnabled=val end})
+ESPTab:CreateToggle({Name="ESP Highlights", CurrentValue=false, Callback=function(val) espEnabled=val end})
+ESPTab:CreateToggle({Name="Tracers", CurrentValue=false, Callback=function(val) tracerEnabled=val end})
+ESPTab:CreateToggle({Name="Name ESP", CurrentValue=false, Callback=function(val) nameEnabled=val end})

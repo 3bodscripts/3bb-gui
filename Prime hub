@@ -62,6 +62,8 @@ CreateGameButton(GamesTab, "Build a Boat", "https://raw.githubusercontent.com/ca
 CreateGameButton(GamesTab, "Bedwars", "https://raw.githubusercontent.com/VapeVoidware/VWRewrite/main/NewMainScript.lua")
 CreateGameButton(GamesTab, "Murder Vs Sheriff Duel", "https://raw.githubusercontent.com/TheRealAvrwm/Zephyr-V2/refs/heads/main/ZephyrV2")
 CreateGameButton(GamesTab, "Murder Vs Sheriff Duel Farm", "https://raw.githubusercontent.com/TheRealAvrwm/Projects/refs/heads/main/Autofarm%20Beta")
+CreateGameButton(GamesTab, "Rivals", "https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677")
+CreateGameButton(GamesTab, "Block spin", "loadstring(game:HttpGet('https://raw.githubusercontent.com/hermanos-dev/hermanos-hub/refs/heads/main/BlockSpin/blockspin-pvp.lua'))()")
 
 -- =======================
 -- ⚙️ MISC TAB
@@ -158,24 +160,58 @@ MiscTab:CreateToggle({
    end
 })
 
+-- Anti-AFK Button
+MiscTab:CreateButton({
+    Name = "Anti AFK",
+    Callback = function()
+        local VirtualUser = game:GetService("VirtualUser")
+        local Players = game:GetService("Players")
+        local StarterGui = game:GetService("StarterGui")
+        local localPlayer = Players.LocalPlayer
+
+        -- Connect Anti-AFK
+        localPlayer.Idled:Connect(function()
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end)
+
+        -- Rayfield notify
+        Rayfield:Notify({Title="Anti AFK", Content="Enabled ✅", Duration=2})
+
+        -- StarterGui notification
+        pcall(function()
+            StarterGui:SetCore("SendNotification", {
+                Title = "AntiAFK loaded!",
+                Text = "Made by 3bb",
+                Button1 = "Thanks",
+                Duration = 5
+            })
+        end)
+    end
+})
+
+-- Infinite Yield Button
+MiscTab:CreateButton({
+    Name = "Infinite Yield",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkNetworks/Infinite-Yield/main/latest.lua'))()
+        Rayfield:Notify({Title="Infinite Yield", Content="Executed ✅", Duration=2})
+    end
+})
 -- =======================
--- ✨ ESP TAB (LAST)
+-- ✨ ESP TAB (Persistent, All Red)
 -- =======================
 local ESPTab = Window:CreateTab("ESP", nil)
 
 local boxes, espHighlights, tracers, names = {}, {}, {}, {}
 local boxEnabled, espEnabled, tracerEnabled, nameEnabled = false, false, false, false
 
--- Helper
+-- All players will be red
 local function getColor(plr)
-    if plr.Team ~= LocalPlayer.Team then
-        return Color3.fromRGB(255,0,0)
-    else
-        return Color3.fromRGB(0,255,0)
-    end
+    return Color3.fromRGB(255, 0, 0)
 end
 
--- BOX ESP
+-- Box ESP
 local function updateBoxes()
     for _, plr in pairs(Players:GetPlayers()) do
         if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
@@ -201,28 +237,7 @@ local function updateBoxes()
     end
 end
 
--- HIGHLIGHT ESP
-local function updateESP()
-    for _, plr in pairs(Players:GetPlayers()) do
-        if plr ~= LocalPlayer and plr.Character then
-            if espEnabled and not espHighlights[plr] then
-                local highlight = Instance.new("Highlight")
-                highlight.Name = "ESP_Highlight"
-                highlight.Adornee = plr.Character
-                highlight.FillColor = getColor(plr)
-                highlight.FillTransparency = 0.5
-                highlight.OutlineTransparency = 0
-                highlight.Parent = game:GetService("CoreGui")
-                espHighlights[plr] = highlight
-            elseif not espEnabled and espHighlights[plr] then
-                espHighlights[plr]:Destroy()
-                espHighlights[plr] = nil
-            end
-        end
-    end
-end
-
--- TRACERS
+-- Tracers
 local function updateTracers()
     for _, plr in pairs(Players:GetPlayers()) do
         if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
@@ -249,7 +264,7 @@ local function updateTracers()
     end
 end
 
--- NAMES
+-- Names ESP
 local function updateNames()
     for _, plr in pairs(Players:GetPlayers()) do
         if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
@@ -270,16 +285,173 @@ local function updateNames()
     end
 end
 
--- Render Loop
+-- Highlight ESP
+local function updateHighlightForPlayer(plr)
+    if plr ~= LocalPlayer and plr.Character then
+        if espHighlights[plr] then
+            espHighlights[plr]:Destroy()
+            espHighlights[plr] = nil
+        end
+        if espEnabled then
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "ESP_Highlight"
+            highlight.Adornee = plr.Character
+            highlight.FillColor = getColor(plr)
+            highlight.FillTransparency = 0.5
+            highlight.OutlineTransparency = 0
+            highlight.Parent = game:GetService("CoreGui")
+            espHighlights[plr] = highlight
+        end
+    end
+end
+
+-- Reapply highlight when player respawns
+local function setupHighlightForPlayer(plr)
+    plr.CharacterAdded:Connect(function()
+        wait(0.5)
+        updateHighlightForPlayer(plr)
+    end)
+end
+
+-- Apply for all current and future players
+for _, plr in pairs(Players:GetPlayers()) do
+    if plr ~= LocalPlayer then
+        setupHighlightForPlayer(plr)
+    end
+end
+
+Players.PlayerAdded:Connect(function(plr)
+    if plr ~= LocalPlayer then
+        setupHighlightForPlayer(plr)
+    end
+end)
+
+-- Main render loop
 RunService.RenderStepped:Connect(function()
     updateBoxes()
-    updateESP()
     updateTracers()
     updateNames()
 end)
 
--- ESP GUI Toggles
-ESPTab:CreateToggle({Name="Box ESP", CurrentValue=false, Callback=function(val) boxEnabled=val end})
-ESPTab:CreateToggle({Name="ESP Highlights", CurrentValue=false, Callback=function(val) espEnabled=val end})
-ESPTab:CreateToggle({Name="Tracers", CurrentValue=false, Callback=function(val) tracerEnabled=val end})
-ESPTab:CreateToggle({Name="Name ESP", CurrentValue=false, Callback=function(val) nameEnabled=val end})
+-- GUI toggles
+ESPTab:CreateToggle({Name="Box ESP", CurrentValue=false, Callback=function(val) boxEnabled=val updateBoxes() end})
+ESPTab:CreateToggle({Name="ESP Highlights", CurrentValue=false, Callback=function(val) espEnabled=val
+    for _, plr in pairs(Players:GetPlayers()) do
+        updateHighlightForPlayer(plr)
+    end
+end})
+ESPTab:CreateToggle({Name="Tracers", CurrentValue=false, Callback=function(val) tracerEnabled=val updateTracers() end})
+ESPTab:CreateToggle({Name="Name ESP", CurrentValue=false, Callback=function(val) nameEnabled=val updateNames() end})
+
+-- =======================
+-- ⚔️ COMBAT TAB (Hitbox + Aimbot)
+-- =======================
+local CombatTab = Window:CreateTab("⚔️ Combat", nil)
+
+local hitboxes = {}
+local hitboxEnabled = false
+local hitboxSize = 5
+local maxHitboxSize = 50
+
+-- Create/update hitbox for a player
+local function updateHitbox(plr)
+    if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+        if hitboxes[plr] then
+            hitboxes[plr]:Destroy()
+        end
+
+        if hitboxEnabled then
+            local box = Instance.new("Part")
+            box.Name = "Hitbox_Expander"
+            box.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+            box.Transparency = 0.7
+            box.Anchored = true
+            box.CanCollide = false
+            box.Color = Color3.fromRGB(255, 0, 0)
+            box.Parent = workspace
+
+            local conn
+            conn = RunService.Heartbeat:Connect(function()
+                if plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    box.Position = plr.Character.HumanoidRootPart.Position
+                else
+                    conn:Disconnect()
+                    box:Destroy()
+                    hitboxes[plr] = nil
+                end
+            end)
+
+            hitboxes[plr] = box
+        end
+    end
+end
+
+-- Reapply hitbox on respawn
+local function setupHitboxForPlayer(plr)
+    plr.CharacterAdded:Connect(function()
+        wait(0.5)
+        updateHitbox(plr)
+    end)
+end
+
+for _, plr in pairs(Players:GetPlayers()) do
+    if plr ~= LocalPlayer then
+        setupHitboxForPlayer(plr)
+    end
+end
+
+Players.PlayerAdded:Connect(function(plr)
+    if plr ~= LocalPlayer then
+        setupHitboxForPlayer(plr)
+    end
+end)
+
+-- Render loop for hitboxes
+RunService.RenderStepped:Connect(function()
+    if hitboxEnabled then
+        for _, plr in pairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer then
+                updateHitbox(plr)
+            end
+        end
+    end
+end)
+
+-- GUI Toggles & Slider
+CombatTab:CreateToggle({
+    Name = "Enable Hitboxes",
+    CurrentValue = hitboxEnabled,
+    Callback = function(val)
+        hitboxEnabled = val
+        if not val then
+            for _, box in pairs(hitboxes) do
+                if box then box:Destroy() end
+            end
+            hitboxes = {}
+        end
+    end
+})
+
+CombatTab:CreateSlider({
+    Name = "Hitbox Size",
+    Range = {5, maxHitboxSize},
+    Increment = 1,
+    CurrentValue = hitboxSize,
+    Suffix = "Studs",
+    Callback = function(val)
+        hitboxSize = val
+        for _, plr in pairs(Players:GetPlayers()) do
+            if hitboxes[plr] then
+                hitboxes[plr].Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+            end
+        end
+    end
+})
+
+CombatTab:CreateButton({
+    Name = "Aimbot",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677"))()
+        Rayfield:Notify({Title="Aimbot", Content="Executed ✅", Duration=2})
+    end
+})

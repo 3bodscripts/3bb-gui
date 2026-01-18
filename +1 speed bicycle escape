@@ -8,11 +8,6 @@ window:AddToggle({
     state = false,
     callback = function(state)
         infiniteJumpEnabled = state
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "3bb Hub",
-            Text = "Infinite Jump = "..tostring(state),
-            Duration = 3
-        })
     end
 })
 
@@ -33,11 +28,6 @@ window:AddToggle({
     state = false,
     callback = function(state)
         noclipEnabled = state
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "3bb Hub",
-            Text = "Noclip = "..tostring(state),
-            Duration = 3
-        })
     end
 })
 
@@ -66,11 +56,6 @@ window:AddSlider({
         local char = player.Character or player.CharacterAdded:Wait()
         local humanoid = char:WaitForChild("Humanoid")
         humanoid.WalkSpeed = speed
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "3bb Hub",
-            Text = "WalkSpeed = "..speed,
-            Duration = 2
-        })
     end
 })
 
@@ -103,7 +88,9 @@ window:AddButton({
     callback = function()
         local player = game.Players.LocalPlayer
         local vu = game:GetService("VirtualUser")
-        if _G.AFKConnection then _G.AFKConnection:Disconnect() end
+        if _G.AFKConnection then
+            _G.AFKConnection:Disconnect()
+        end
         _G.AFKConnection = player.Idled:Connect(function()
             vu:CaptureController()
             vu:ClickButton2(Vector2.new())

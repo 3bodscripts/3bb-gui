@@ -1,0 +1,86 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.ResetOnSpawn = false
+
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 340, 0, 260)
+main.Position = UDim2.new(0.5, -170, 0.5, -130)
+main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+main.Active = true
+main.Draggable = true
+main.BorderSizePixel = 0
+
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 16)
+
+local title = Instance.new("TextLabel", main)
+title.Size = UDim2.new(1, 0, 0, 50)
+title.Text = "+1 Speed Bike Escape | Key System"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 14
+title.BackgroundTransparency = 1
+
+local box = Instance.new("TextBox", main)
+box.Size = UDim2.new(0.8, 0, 0, 40)
+box.Position = UDim2.new(0.1, 0, 0.32, 0)
+box.PlaceholderText = "Enter Key"
+box.Text = ""
+box.Font = Enum.Font.Gotham
+box.TextSize = 14
+box.TextColor3 = Color3.fromRGB(255, 255, 255)
+box.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+box.BorderSizePixel = 0
+
+Instance.new("UICorner", box).CornerRadius = UDim.new(0, 12)
+
+local getKey = Instance.new("TextButton", main)
+getKey.Size = UDim2.new(0.8, 0, 0, 40)
+getKey.Position = UDim2.new(0.1, 0, 0.48, 0)
+getKey.Text = "Get Key"
+getKey.Font = Enum.Font.GothamBold
+getKey.TextSize = 14
+getKey.TextColor3 = Color3.fromRGB(255, 255, 255)
+getKey.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+getKey.BorderSizePixel = 0
+
+Instance.new("UICorner", getKey).CornerRadius = UDim.new(0, 12)
+
+local verify = Instance.new("TextButton", main)
+verify.Size = UDim2.new(0.8, 0, 0, 40)
+verify.Position = UDim2.new(0.1, 0, 0.64, 0)
+verify.Text = "Verify Key"
+verify.Font = Enum.Font.GothamBold
+verify.TextSize = 14
+verify.TextColor3 = Color3.fromRGB(255, 255, 255)
+verify.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+verify.BorderSizePixel = 0
+
+Instance.new("UICorner", verify).CornerRadius = UDim.new(0, 12)
+
+local status = Instance.new("TextLabel", main)
+status.Size = UDim2.new(1, 0, 0, 30)
+status.Position = UDim2.new(0, 0, 0.82, 0)
+status.Text = ""
+status.Font = Enum.Font.Gotham
+status.TextSize = 13
+status.TextColor3 = Color3.fromRGB(255, 255, 255)
+status.BackgroundTransparency = 1
+
+getKey.MouseButton1Click:Connect(function()
+	setclipboard("https://pastebin.com/dnF9s46G")
+	status.Text = "Key link copied!"
+end)
+
+verify.MouseButton1Click:Connect(function()
+	if box.Text == "1234" then
+		status.Text = "Access Granted"
+		task.wait(0.6)
+		gui:Destroy()
+
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/3bodscripts/3bb-gui/refs/heads/main/%2B1%20speed%20bike%20escape"))()
+	else
+		status.Text = "Wrong Key"
+	end
+end)

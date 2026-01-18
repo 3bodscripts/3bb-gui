@@ -69,7 +69,7 @@ status.TextColor3 = Color3.fromRGB(255, 255, 255)
 status.BackgroundTransparency = 1
 
 getKey.MouseButton1Click:Connect(function()
-	setclipboard("https://pastebin.com/dnF9s46G")
+	setclipboard("https://link-hub.net/3020320/Qrcjk1d5pY7V")
 	status.Text = "Key link copied!"
 end)
 

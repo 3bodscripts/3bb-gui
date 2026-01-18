@@ -1,0 +1,126 @@
+-- Load Tora UI
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/liebertsx/Tora-Library/main/src/library", true))()
+
+-- Create main window
+local window = library:CreateWindow("3bb Universal")
+
+-- ====================
+-- Infinite Jump Toggle
+-- ====================
+local infiniteJumpEnabled = false
+window:AddToggle({
+    text = "Infinite Jump",
+    flag = "infJump",
+    state = false,
+    callback = function(state)
+        infiniteJumpEnabled = state
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "3bb Hub",
+            Text = "Infinite Jump = "..tostring(state),
+            Duration = 3
+        })
+    end
+})
+
+-- Connect jump request
+local uis = game:GetService("UserInputService")
+uis.JumpRequest:Connect(function()
+    if infiniteJumpEnabled then
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local humanoid = char:WaitForChild("Humanoid")
+        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+-- ====================
+-- Noclip Toggle
+-- ====================
+local noclipEnabled = false
+window:AddToggle({
+    text = "Noclip",
+    flag = "noclip",
+    state = false,
+    callback = function(state)
+        noclipEnabled = state
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "3bb Hub",
+            Text = "Noclip = "..tostring(state),
+            Duration = 3
+        })
+    end
+})
+
+-- Keep noclip running
+game:GetService("RunService").Stepped:Connect(function()
+    if noclipEnabled then
+        local player = game.Players.LocalPlayer
+        local char = player.Character
+        if char then
+            for _, part in pairs(char:GetChildren()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end
+end)
+
+-- ====================
+-- WalkSpeed Slider
+-- ====================
+window:AddSlider({
+    text = "WalkSpeed",
+    flag = "walkSpeed",
+    min = 16,
+    max = 200,
+    value = 16,
+    callback = function(speed)
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local humanoid = char:WaitForChild("Humanoid")
+        humanoid.WalkSpeed = speed
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "3bb Hub",
+            Text = "WalkSpeed = "..speed,
+            Duration = 2
+        })
+    end
+})
+
+window:AddSlider({
+    text = "Jump Boost",
+    flag = "jumpPower",
+    min = 50,
+    max = 250,
+    value = 50,
+    callback = function(power)
+        local char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+        char:WaitForChild("Humanoid").JumpPower = power
+    end
+})
+
+window:AddButton({
+    text = "Enable Anti-AFK",
+    callback = function()
+        local vu = game:GetService("VirtualUser")
+        game.Players.LocalPlayer.Idled:Connect(function()
+            vu:CaptureController()
+            vu:ClickButton2(Vector2.new())
+        end)
+    end
+})
+
+window:AddButton({
+    text = "Flying GUI",
+    callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/3bodscripts/3bb-gui/refs/heads/main/Fly%20gui"))()
+    end
+})
+
+window:AddLabel({
+    text = "Made by: 3bb",
+    type = "label"
+})
+
+library:Init()

@@ -1,5 +1,5 @@
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/liebertsx/Tora-Library/main/src/library", true))()
-local window = library:CreateWindow("3bb Hub")
+local window = library:CreateWindow("+1 speed bike escape")
 
 local infiniteJumpEnabled = false
 window:AddToggle({

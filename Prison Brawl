@@ -1,0 +1,86 @@
+-- ===============================
+-- Load Tora UI Library
+-- ===============================
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/liebertsx/Tora-Library/main/src/library", true))()
+
+-- ===============================
+-- Create Main Window
+-- ===============================
+local window = library:CreateWindow("prison brawl") -- Change title if you want
+
+-- ===============================
+-- Reception Teleport Button
+-- ===============================
+window:AddButton({
+    text = "Reception",
+    flag = "teleportReception",
+    callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(412, -19, -422)
+    end
+})
+
+-- ===============================
+-- Cafeteria Teleport Button
+-- ===============================
+window:AddButton({
+    text = "Cafeteria",
+    flag = "teleportCafeteria",
+    callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(356, -16, -285)
+    end
+})
+
+-- ===============================
+-- Showers Teleport Button
+-- ===============================
+window:AddButton({
+    text = "Showers",
+    flag = "teleportShowers",
+    callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(269, -15, -281)
+    end
+})
+
+-- ===============================
+-- Cells Teleport Button
+-- ===============================
+window:AddButton({
+    text = "Cells",
+    flag = "teleportCells",
+    callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(249, -19, -157)
+    end
+})
+
+-- ===============================
+-- Yard Teleport Button
+-- ===============================
+window:AddButton({
+    text = "Yard",
+    flag = "teleportYard",
+    callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(256, -19, -424)
+    end
+})
+
+window:AddLabel({
+    text = "Made by: 3bb",
+    type = "label"
+})
+
+library:Init()

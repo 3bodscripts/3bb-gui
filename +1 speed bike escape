@@ -108,6 +108,4 @@ window:AddLabel({
     type = "label"
 })
 
-print("Test script active!")
-
 library:Init()

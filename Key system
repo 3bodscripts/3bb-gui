@@ -74,7 +74,7 @@ getKey.MouseButton1Click:Connect(function()
 end)
 
 verify.MouseButton1Click:Connect(function()
-	if box.Text == "1234" then
+	if box.Text == "3bb2026" then
 		status.Text = "Access Granted"
 		task.wait(0.6)
 		gui:Destroy()

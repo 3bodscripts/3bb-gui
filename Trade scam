@@ -1,0 +1,236 @@
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+local PlayerGui = player:WaitForChild("PlayerGui")
+
+-- ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Parent = PlayerGui
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+
+-- Main Frame
+local frame = Instance.new("Frame")
+frame.Parent = gui
+frame.Size = UDim2.new(0,280,0,360)
+frame.Position = UDim2.new(0.5,-140,0.5,-180)
+frame.BackgroundColor3 = Color3.fromRGB(30,30,35)
+frame.Active = true
+
+Instance.new("UICorner",frame).CornerRadius = UDim.new(0,12)
+local stroke = Instance.new("UIStroke")
+stroke.Parent = frame
+stroke.Color = Color3.fromRGB(70,70,75)
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Parent = frame
+title.Size = UDim2.new(1,0,0,40)
+title.BackgroundTransparency = 1
+title.Text = "STEAL A BRAINROT"
+title.TextColor3 = Color3.new(1,1,1)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+
+-- Close Button
+local close = Instance.new("TextButton")
+close.Parent = frame
+close.Size = UDim2.new(0,30,0,30)
+close.Position = UDim2.new(1,-40,0,5)
+close.BackgroundColor3 = Color3.fromRGB(45,45,50)
+close.Text = "X"
+close.TextColor3 = Color3.new(1,1,1)
+close.Font = Enum.Font.GothamBold
+close.TextSize = 16
+Instance.new("UICorner",close).CornerRadius = UDim.new(0,8)
+
+close.MouseButton1Click:Connect(function()
+	frame.Visible = false
+end)
+
+-- Username label
+local label = Instance.new("TextLabel")
+label.Parent = frame
+label.Position = UDim2.new(0,15,0,50)
+label.Size = UDim2.new(1,-30,0,20)
+label.BackgroundTransparency = 1
+label.Text = "Victims Username:"
+label.TextColor3 = Color3.fromRGB(200,200,200)
+label.Font = Enum.Font.Gotham
+label.TextSize = 14
+label.TextXAlignment = Enum.TextXAlignment.Left
+
+-- TextBox
+local box = Instance.new("TextBox")
+box.Parent = frame
+box.Position = UDim2.new(0,15,0,75)
+box.Size = UDim2.new(1,-90,0,38)
+box.BackgroundColor3 = Color3.fromRGB(45,45,50)
+box.PlaceholderText = "username"
+box.TextColor3 = Color3.new(1,1,1)
+box.Font = Enum.Font.Gotham
+box.TextSize = 16
+Instance.new("UICorner",box).CornerRadius = UDim.new(0,8)
+
+-- Avatar
+local avatar = Instance.new("ImageLabel")
+avatar.Parent = frame
+avatar.Size = UDim2.new(0,50,0,50)
+avatar.Position = UDim2.new(1,-65,0,55)
+avatar.BackgroundTransparency = 1
+Instance.new("UICorner",avatar).CornerRadius = UDim.new(1,0)
+
+-- Trade Button
+local trade = Instance.new("TextButton")
+trade.Parent = frame
+trade.Position = UDim2.new(0,15,0,130)
+trade.Size = UDim2.new(1,-30,0,40)
+trade.BackgroundColor3 = Color3.fromRGB(70,130,220)
+trade.Text = "Send Trade Request"
+trade.TextColor3 = Color3.new(1,1,1)
+trade.Font = Enum.Font.GothamBold
+trade.TextSize = 16
+Instance.new("UICorner",trade).CornerRadius = UDim.new(0,10)
+
+-- Toggle Creator (Bigger toggles)
+local function createToggle(text, y)
+	local label = Instance.new("TextLabel")
+	label.Parent = frame
+	label.Position = UDim2.new(0,15,0,y)
+	label.Size = UDim2.new(1,-80,0,36) -- taller label
+	label.BackgroundTransparency = 1
+	label.Text = text
+	label.TextColor3 = Color3.new(1,1,1)
+	label.Font = Enum.Font.Gotham
+	label.TextSize = 18 -- bigger font
+	label.TextXAlignment = Enum.TextXAlignment.Left
+
+	local toggle = Instance.new("TextButton")
+	toggle.Parent = frame
+	toggle.Size = UDim2.new(0,60,0,28) -- bigger toggle
+	toggle.Position = UDim2.new(1,-75,0,y+4)
+	toggle.BackgroundColor3 = Color3.fromRGB(70,70,70)
+	toggle.Text = ""
+	Instance.new("UICorner", toggle).CornerRadius = UDim.new(1,0)
+
+	local circle = Instance.new("Frame")
+	circle.Parent = toggle
+	circle.Size = UDim2.new(0,24,0,24) -- bigger circle
+	circle.Position = UDim2.new(0,2,0.5,-12)
+	circle.BackgroundColor3 = Color3.new(1,1,1)
+	Instance.new("UICorner", circle).CornerRadius = UDim.new(1,0)
+
+	local state = false
+	toggle.MouseButton1Click:Connect(function()
+		state = not state
+		if state then
+			toggle.BackgroundColor3 = Color3.fromRGB(0,200,120)
+			circle.Position = UDim2.new(1,-26,0.5,-12)
+		else
+			toggle.BackgroundColor3 = Color3.fromRGB(70,70,70)
+			circle.Position = UDim2.new(0,2,0.5,-12)
+		end
+	end)
+end
+
+createToggle("Freeze victims screen",200)
+createToggle("Auto accept trade",240)
+
+-- Warning text (two lines centered)
+local warningFrame = Instance.new("Frame")
+warningFrame.Parent = frame
+warningFrame.Size = UDim2.new(1,-30,0,40)
+warningFrame.Position = UDim2.new(0,15,0,285)
+warningFrame.BackgroundTransparency = 1
+
+-- First line
+local line1 = Instance.new("TextLabel")
+line1.Parent = warningFrame
+line1.Size = UDim2.new(1,0,0,20)
+line1.Position = UDim2.new(0,0,0,0)
+line1.BackgroundTransparency = 1
+line1.Text = "MAKE SURE YOU ARE IN A TRADE"
+line1.TextColor3 = Color3.fromRGB(200,200,200)
+line1.Font = Enum.Font.Gotham
+line1.TextSize = 12
+line1.TextXAlignment = Enum.TextXAlignment.Center
+
+-- Second line
+local line2 = Instance.new("TextLabel")
+line2.Parent = warningFrame
+line2.Size = UDim2.new(1,0,0,20)
+line2.Position = UDim2.new(0,0,0,20)
+line2.BackgroundTransparency = 1
+line2.Text = "BEFORE TURNING ON"
+line2.TextColor3 = Color3.fromRGB(200,200,200)
+line2.Font = Enum.Font.Gotham
+line2.TextSize = 12
+line2.TextXAlignment = Enum.TextXAlignment.Center
+
+-- Credit
+local credit = Instance.new("TextLabel")
+credit.Parent = frame
+credit.Size = UDim2.new(1,-20,0,18)
+credit.Position = UDim2.new(0,10,1,-20)
+credit.BackgroundTransparency = 1
+credit.Text = "Made by 3bb"
+credit.TextColor3 = Color3.fromRGB(120,120,255)
+credit.Font = Enum.Font.GothamBold
+credit.TextSize = 13
+credit.TextXAlignment = Enum.TextXAlignment.Right
+
+-- Avatar loader
+box.FocusLost:Connect(function()
+	local success,id = pcall(function()
+		return Players:GetUserIdFromNameAsync(box.Text)
+	end)
+	if success then
+		local thumb = Players:GetUserThumbnailAsync(id,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size420x420)
+		avatar.Image = thumb
+	end
+end)
+
+-- Smooth draggable (PC & mobile)
+local dragging = false
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+	local delta = input.Position - dragStart
+	local goal = {}
+	goal.Position = UDim2.new(
+		startPos.X.Scale,
+		startPos.X.Offset + delta.X,
+		startPos.Y.Scale,
+		startPos.Y.Offset + delta.Y
+	)
+	TweenService:Create(frame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), goal):Play()
+end
+
+frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+frame.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		update(input)
+	end
+end)

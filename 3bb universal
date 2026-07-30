@@ -27,11 +27,11 @@ else
     ScreenGui.Parent = player:WaitForChild("PlayerGui")
 end
 
--- --- TOGGLE BUTTON (LEFT SIDE, MOVED UP FURTHER) ---
+-- --- TOGGLE BUTTON (MOVED HIGHER UP) ---
 local ToggleMenuBtn = Instance.new("TextButton")
 ToggleMenuBtn.Name = "ToggleMenuBtn"
 ToggleMenuBtn.Size = UDim2.new(0, 110, 0, 32)
-ToggleMenuBtn.Position = UDim2.new(0, 15, 0.2, 0)
+ToggleMenuBtn.Position = UDim2.new(0, 15, 0.18, 0) -- Shifted up
 ToggleMenuBtn.BackgroundColor3 = Color3.fromRGB(24, 24, 30)
 ToggleMenuBtn.TextColor3 = Color3.fromRGB(240, 240, 245)
 ToggleMenuBtn.Font = Enum.Font.GothamBold
@@ -50,7 +50,6 @@ ToggleBtnStroke.Thickness = 1.5
 ToggleBtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 ToggleBtnStroke.Parent = ToggleMenuBtn
 
--- Accent line indicator on the left side of toggle button
 local ToggleAccent = Instance.new("Frame")
 ToggleAccent.Size = UDim2.new(0, 3, 0.6, 0)
 ToggleAccent.Position = UDim2.new(0, 6, 0.2, 0)
@@ -62,7 +61,6 @@ local AccentCorner = Instance.new("UICorner")
 AccentCorner.CornerRadius = UDim.new(1, 0)
 AccentCorner.Parent = ToggleAccent
 
--- Toggle Button Hover Animations
 ToggleMenuBtn.MouseEnter:Connect(function()
     TweenService:Create(ToggleMenuBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(34, 34, 44)}):Play()
     TweenService:Create(ToggleBtnStroke, TweenInfo.new(0.15), {Color = Color3.fromRGB(220, 50, 50)}):Play()
@@ -76,8 +74,8 @@ end)
 -- --- MAIN FRAME ---
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 340, 0, 465)
-MainFrame.Position = UDim2.new(0.5, -170, 0.5, -232)
+MainFrame.Size = UDim2.new(0, 340, 0, 470)
+MainFrame.Position = UDim2.new(0.5, -170, 0.5, -235)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
@@ -116,11 +114,10 @@ TitleLabel.TextSize = 14
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Parent = TitleBar
 
--- Close Button (Updated to standard Gotham 'X')
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Name = "CloseBtn"
-CloseBtn.Size = UDim2.new(0, 26, 0, 26)
-CloseBtn.Position = UDim2.new(1, -33, 0.5, -13)
+CloseBtn.Size = UDim2.new(0, 24, 0, 24)
+CloseBtn.Position = UDim2.new(1, -32, 0.5, -12)
 CloseBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
 CloseBtn.Text = "X"
 CloseBtn.TextColor3 = Color3.fromRGB(200, 200, 215)
@@ -147,6 +144,19 @@ CloseBtn.MouseLeave:Connect(function()
     }):Play()
 end)
 
+-- --- BOTTOM BAR CREDIT ---
+local CreditLabel = Instance.new("TextLabel")
+CreditLabel.Name = "CreditLabel"
+CreditLabel.Size = UDim2.new(1, -20, 0, 20)
+CreditLabel.Position = UDim2.new(0, 12, 1, -22)
+CreditLabel.BackgroundTransparency = 1
+CreditLabel.Text = "made by 3bb"
+CreditLabel.TextColor3 = Color3.fromRGB(110, 110, 130)
+CreditLabel.Font = Enum.Font.GothamMedium
+CreditLabel.TextSize = 10
+CreditLabel.TextXAlignment = Enum.TextXAlignment.Left
+CreditLabel.Parent = MainFrame
+
 -- Scrollable Container
 local ScrollContainer = Instance.new("ScrollingFrame")
 ScrollContainer.Size = UDim2.new(1, -16, 1, -68)
@@ -168,26 +178,6 @@ UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     ScrollContainer.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 12)
 end)
 
--- --- FOOTER ("Made by 3bb") ---
-local FooterFrame = Instance.new("Frame")
-FooterFrame.Name = "FooterFrame"
-FooterFrame.Size = UDim2.new(1, 0, 0, 20)
-FooterFrame.Position = UDim2.new(0, 0, 1, -20)
-FooterFrame.BackgroundTransparency = 1
-FooterFrame.Parent = MainFrame
-
-local CreditLabel = Instance.new("TextLabel")
-CreditLabel.Name = "CreditLabel"
-CreditLabel.Size = UDim2.new(1, -20, 1, 0)
-CreditLabel.Position = UDim2.new(0, 14, 0, 0)
-CreditLabel.BackgroundTransparency = 1
-CreditLabel.Text = "Made by 3bb"
-CreditLabel.TextColor3 = Color3.fromRGB(110, 110, 130)
-CreditLabel.Font = Enum.Font.GothamMedium
-CreditLabel.TextSize = 10
-CreditLabel.TextXAlignment = Enum.TextXAlignment.Left
-CreditLabel.Parent = FooterFrame
-
 -- --- SPECTATE BOTTOM UI FRAME ---
 local SpectateFrame = Instance.new("Frame")
 SpectateFrame.Name = "SpectateFrame"
@@ -207,7 +197,6 @@ SpecStroke.Color = Color3.fromRGB(50, 50, 65)
 SpecStroke.Thickness = 1.5
 SpecStroke.Parent = SpectateFrame
 
--- Spectate Controls
 local PrevBtn = Instance.new("TextButton")
 PrevBtn.Size = UDim2.new(0, 34, 0, 34)
 PrevBtn.Position = UDim2.new(0, 8, 0.5, -17)
@@ -247,7 +236,7 @@ SpecUserLabel.TextSize = 12
 SpecUserLabel.TextTruncate = Enum.TextTruncate.AtEnd
 SpecUserLabel.Parent = SpectateFrame
 
--- Feature State Variables
+-- Feature States
 local flyEnabled = false
 local flySpeed = 50
 local infJumpEnabled = false
@@ -266,8 +255,9 @@ local specIndex = 1
 local setSpectateToggleState
 
 local aimLockEnabled = false
+local aimLockClosestToggle = false
 local aimLockTarget = nil
-local selectedBodyPart = "HumanoidRootPart"
+local selectedAimPart = "HumanoidRootPart"
 
 local espEnabled = false
 local selectedEspType = "Highlights"
@@ -298,6 +288,34 @@ local function getTargetPlayer(text)
         end
     end
     return nil
+end
+
+local function getClosestPlayerToCursor()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local cam = workspace.CurrentCamera
+    local mouse = player:GetMouse()
+    local mousePos = Vector2.new(mouse.X, mouse.Y)
+
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= player then
+            local char = p.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum and hum.Health > 0 then
+                    local screenPos, onScreen = cam:WorldToViewportPoint(char.HumanoidRootPart.Position)
+                    if onScreen then
+                        local dist = (mousePos - Vector2.new(screenPos.X, screenPos.Y)).Magnitude
+                        if dist < shortestDistance then
+                            shortestDistance = dist
+                            closestPlayer = p
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return closestPlayer
 end
 
 local function getValidPlayers()
@@ -621,135 +639,150 @@ local limitRow, limitLabel = createRowFrame()
 limitLabel.Text = "Limit infinite jump to 2 jumps only"
 createToggle(limitRow, limitJumpsEnabled, function(value) limitJumpsEnabled = value end)
 
--- SECTION: AIM LOCKING
+-- SECTION: AIM LOCKING (FULL SUITE RESTORED)
 createSectionTitle("Aim locking")
 
-local aimTargetRow = Instance.new("Frame")
+-- Feature 1: Manual Target Input
+local lockRow = Instance.new("Frame")
 layoutOrder = layoutOrder + 1
-aimTargetRow.Size = UDim2.new(1, -6, 0, 48)
-aimTargetRow.BackgroundColor3 = Color3.fromRGB(24, 24, 30)
-aimTargetRow.LayoutOrder = layoutOrder
-aimTargetRow.Parent = ScrollContainer
+lockRow.Size = UDim2.new(1, -6, 0, 48)
+lockRow.BackgroundColor3 = Color3.fromRGB(24, 24, 30)
+lockRow.LayoutOrder = layoutOrder
+lockRow.Parent = ScrollContainer
 
-local aimTargetCorner = Instance.new("UICorner")
-aimTargetCorner.CornerRadius = UDim.new(0, 10)
-aimTargetCorner.Parent = aimTargetRow
+local lockCorner = Instance.new("UICorner")
+lockCorner.CornerRadius = UDim.new(0, 10)
+lockCorner.Parent = lockRow
 
-local aimTargetStroke = Instance.new("UIStroke")
-aimTargetStroke.Color = Color3.fromRGB(35, 35, 45)
-aimTargetStroke.Thickness = 1
-aimTargetStroke.Parent = aimTargetRow
+local lockStroke = Instance.new("UIStroke")
+lockStroke.Color = Color3.fromRGB(35, 35, 45)
+lockStroke.Thickness = 1
+lockStroke.Parent = lockRow
 
-local aimNameBox = Instance.new("TextBox")
-aimNameBox.Size = UDim2.new(0.62, -10, 0, 30)
-aimNameBox.Position = UDim2.new(0, 12, 0.5, -15)
-aimNameBox.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
-aimNameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-aimNameBox.PlaceholderText = "Target player (or partial)"
-aimNameBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 140)
-aimNameBox.Font = Enum.Font.GothamMedium
-aimNameBox.TextSize = 11
-aimNameBox.Text = ""
-aimNameBox.Parent = aimTargetRow
+local aimTargetBox = Instance.new("TextBox")
+aimTargetBox.Size = UDim2.new(0.62, -10, 0, 30)
+aimTargetBox.Position = UDim2.new(0, 12, 0.5, -15)
+aimTargetBox.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+aimTargetBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+aimTargetBox.PlaceholderText = "Target player name"
+aimTargetBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 140)
+aimTargetBox.Font = Enum.Font.GothamMedium
+aimTargetBox.TextSize = 11
+aimTargetBox.Text = ""
+aimTargetBox.Parent = lockRow
 
 local aimBoxCorner = Instance.new("UICorner")
 aimBoxCorner.CornerRadius = UDim.new(0, 8)
-aimBoxCorner.Parent = aimNameBox
+aimBoxCorner.Parent = aimTargetBox
 
 local aimBoxStroke = Instance.new("UIStroke")
 aimBoxStroke.Color = Color3.fromRGB(50, 50, 65)
 aimBoxStroke.Thickness = 1
-aimBoxStroke.Parent = aimNameBox
+aimBoxStroke.Parent = aimTargetBox
 
-aimNameBox:GetPropertyChangedSignal("Text"):Connect(function()
-    aimLockTarget = getTargetPlayer(aimNameBox.Text)
+createButton(lockRow, "Lock Target", function()
+    local target = getTargetPlayer(aimTargetBox.Text)
+    if target then
+        aimLockTarget = target
+        aimTargetBox.Text = target.DisplayName
+    end
 end)
 
-createButton(aimTargetRow, "Set target", function()
-    local found = getTargetPlayer(aimNameBox.Text)
-    if found then
-        aimLockTarget = found
-        aimNameBox.Text = found.DisplayName
+-- Feature 2: Aimlock to Closest (Toggle & Locks onto closest when flipped ON)
+local closestRow, closestLabel = createRowFrame()
+closestLabel.Text = "Aimlock to Closest"
+createToggle(closestRow, aimLockClosestToggle, function(value)
+    aimLockClosestToggle = value
+    if aimLockClosestToggle then
+        -- Find closest target once upon toggling ON and keep it
+        aimLockTarget = getClosestPlayerToCursor()
+        if aimLockTarget then
+            aimTargetBox.Text = aimLockTarget.DisplayName
+        end
     else
         aimLockTarget = nil
     end
 end)
 
--- BODY PART DROPDOWN
+-- Feature 3: Auto Lock Toggle
+local autoLockRow, autoLockLabel = createRowFrame()
+autoLockLabel.Text = "Auto Lock Active Target"
+createToggle(autoLockRow, aimLockEnabled, function(value)
+    aimLockEnabled = value
+end)
+
+-- Feature 4: Target Body Part Selector Dropdown
 local bodyParts = {
+    {Name = "HumanoidRootPart", Value = "HumanoidRootPart"},
     {Name = "Head", Value = "Head"},
-    {Name = "Root (Center)", Value = "HumanoidRootPart"},
-    {Name = "Upper Torso", Value = "UpperTorso"},
-    {Name = "Lower Torso", Value = "LowerTorso"},
-    {Name = "Left Arm", Value = "LeftUpperArm"},
-    {Name = "Right Arm", Value = "RightUpperArm"}
+    {Name = "UpperTorso", Value = "UpperTorso"}
 }
 
-local dropdownRow = Instance.new("Frame")
+local bodyPartDropdownRow = Instance.new("Frame")
 layoutOrder = layoutOrder + 1
-dropdownRow.Size = UDim2.new(1, -6, 0, 48)
-dropdownRow.BackgroundColor3 = Color3.fromRGB(24, 24, 30)
-dropdownRow.ClipsDescendants = true
-dropdownRow.LayoutOrder = layoutOrder
-dropdownRow.Parent = ScrollContainer
+bodyPartDropdownRow.Size = UDim2.new(1, -6, 0, 48)
+bodyPartDropdownRow.BackgroundColor3 = Color3.fromRGB(24, 24, 30)
+bodyPartDropdownRow.ClipsDescendants = true
+bodyPartDropdownRow.LayoutOrder = layoutOrder
+bodyPartDropdownRow.Parent = ScrollContainer
 
-local ddCorner = Instance.new("UICorner")
-ddCorner.CornerRadius = UDim.new(0, 10)
-ddCorner.Parent = dropdownRow
+local bpDdCorner = Instance.new("UICorner")
+bpDdCorner.CornerRadius = UDim.new(0, 10)
+bpDdCorner.Parent = bodyPartDropdownRow
 
-local ddStroke = Instance.new("UIStroke")
-ddStroke.Color = Color3.fromRGB(35, 35, 45)
-ddStroke.Thickness = 1
-ddStroke.Parent = dropdownRow
+local bpDdStroke = Instance.new("UIStroke")
+bpDdStroke.Color = Color3.fromRGB(35, 35, 45)
+bpDdStroke.Thickness = 1
+bpDdStroke.Parent = bodyPartDropdownRow
 
-local ddLabel = Instance.new("TextLabel")
-ddLabel.Size = UDim2.new(0.4, -10, 0, 48)
-ddLabel.Position = UDim2.new(0, 12, 0, 0)
-ddLabel.BackgroundTransparency = 1
-ddLabel.Text = "Target Body Part"
-ddLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
-ddLabel.Font = Enum.Font.GothamMedium
-ddLabel.TextSize = 12
-ddLabel.TextXAlignment = Enum.TextXAlignment.Left
-ddLabel.Parent = dropdownRow
+local bpDdLabel = Instance.new("TextLabel")
+bpDdLabel.Size = UDim2.new(0.4, -10, 0, 48)
+bpDdLabel.Position = UDim2.new(0, 12, 0, 0)
+bpDdLabel.BackgroundTransparency = 1
+bpDdLabel.Text = "Target Part"
+bpDdLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+bpDdLabel.Font = Enum.Font.GothamMedium
+bpDdLabel.TextSize = 12
+bpDdLabel.TextXAlignment = Enum.TextXAlignment.Left
+bpDdLabel.Parent = bodyPartDropdownRow
 
-local ddHeaderBtn = Instance.new("TextButton")
-ddHeaderBtn.Size = UDim2.new(0.55, -10, 0, 30)
-ddHeaderBtn.Position = UDim2.new(0.45, 0, 0, 9)
-ddHeaderBtn.BackgroundColor3 = Color3.fromRGB(32, 32, 42)
-ddHeaderBtn.TextColor3 = Color3.fromRGB(240, 240, 245)
-ddHeaderBtn.Font = Enum.Font.GothamBold
-ddHeaderBtn.TextSize = 11
-ddHeaderBtn.Text = "Root (Center)  ▼"
-ddHeaderBtn.Parent = dropdownRow
+local bpHeaderBtn = Instance.new("TextButton")
+bpHeaderBtn.Size = UDim2.new(0.55, -10, 0, 30)
+bpHeaderBtn.Position = UDim2.new(0.45, 0, 0, 9)
+bpHeaderBtn.BackgroundColor3 = Color3.fromRGB(32, 32, 42)
+bpHeaderBtn.TextColor3 = Color3.fromRGB(240, 240, 245)
+bpHeaderBtn.Font = Enum.Font.GothamBold
+bpHeaderBtn.TextSize = 11
+bpHeaderBtn.Text = "HumanoidRootPart  ▼"
+bpHeaderBtn.Parent = bodyPartDropdownRow
 
-local ddHeaderCorner = Instance.new("UICorner")
-ddHeaderCorner.CornerRadius = UDim.new(0, 8)
-ddHeaderCorner.Parent = ddHeaderBtn
+local bpHeaderCorner = Instance.new("UICorner")
+bpHeaderCorner.CornerRadius = UDim.new(0, 8)
+bpHeaderCorner.Parent = bpHeaderBtn
 
-local optionsFrame = Instance.new("Frame")
-optionsFrame.Size = UDim2.new(0.55, -10, 0, #bodyParts * 26)
-optionsFrame.Position = UDim2.new(0.45, 0, 0, 44)
-optionsFrame.BackgroundTransparency = 1
-optionsFrame.Parent = dropdownRow
+local bpOptionsFrame = Instance.new("Frame")
+bpOptionsFrame.Size = UDim2.new(0.55, -10, 0, #bodyParts * 26)
+bpOptionsFrame.Position = UDim2.new(0.45, 0, 0, 44)
+bpOptionsFrame.BackgroundTransparency = 1
+bpOptionsFrame.Parent = bodyPartDropdownRow
 
-local optionsLayout = Instance.new("UIListLayout")
-optionsLayout.Parent = optionsFrame
-optionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-optionsLayout.Padding = UDim.new(0, 2)
+local bpOptionsLayout = Instance.new("UIListLayout")
+bpOptionsLayout.Parent = bpOptionsFrame
+bpOptionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+bpOptionsLayout.Padding = UDim.new(0, 2)
 
-local isDropdownOpen = false
-local function toggleDropdown()
-    isDropdownOpen = not isDropdownOpen
-    local targetHeight = isDropdownOpen and (48 + #bodyParts * 28) or 48
-    ddHeaderBtn.Text = (isDropdownOpen and selectedBodyPart .. "  ▲") or (selectedBodyPart .. "  ▼")
+local isBpDropdownOpen = false
+local function toggleBpDropdown()
+    isBpDropdownOpen = not isBpDropdownOpen
+    local targetHeight = isBpDropdownOpen and (48 + #bodyParts * 28) or 48
+    bpHeaderBtn.Text = (isBpDropdownOpen and selectedAimPart .. "  ▲") or (selectedAimPart .. "  ▼")
     
-    TweenService:Create(dropdownRow, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    TweenService:Create(bodyPartDropdownRow, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
         Size = UDim2.new(1, -6, 0, targetHeight)
     }):Play()
 end
 
-ddHeaderBtn.MouseButton1Click:Connect(toggleDropdown)
+bpHeaderBtn.MouseButton1Click:Connect(toggleBpDropdown)
 
 for idx, partData in ipairs(bodyParts) do
     local optBtn = Instance.new("TextButton")
@@ -760,25 +793,18 @@ for idx, partData in ipairs(bodyParts) do
     optBtn.TextSize = 10
     optBtn.Text = partData.Name
     optBtn.LayoutOrder = idx
-    optBtn.Parent = optionsFrame
+    optBtn.Parent = bpOptionsFrame
 
     local optCorner = Instance.new("UICorner")
     optCorner.CornerRadius = UDim.new(0, 6)
     optCorner.Parent = optBtn
 
     optBtn.MouseButton1Click:Connect(function()
-        selectedBodyPart = partData.Value
-        ddHeaderBtn.Text = partData.Name .. "  ▼"
-        toggleDropdown()
+        selectedAimPart = partData.Value
+        bpHeaderBtn.Text = partData.Name .. "  ▼"
+        toggleBpDropdown()
     end)
 end
-
-local aimLockRow, aimLockLabel = createRowFrame()
-aimLockLabel.Text = "Aim lock"
-createToggle(aimLockRow, aimLockEnabled, function(value)
-    aimLockEnabled = value
-    if aimLockEnabled then aimLockTarget = getTargetPlayer(aimNameBox.Text) end
-end)
 
 -- SECTION: ESP
 createSectionTitle("ESP Options")
@@ -789,7 +815,6 @@ createToggle(espToggleRow, espEnabled, function(value)
     espEnabled = value
 end)
 
--- ESP TYPE DROPDOWN
 local espTypes = {
     {Name = "Highlights", Value = "Highlights"},
     {Name = "Name", Value = "Name"},
@@ -1191,16 +1216,13 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if not gameProcessed and input.KeyCode == Enum.KeyCode.RightControl then toggleUI() end
 end)
 
--- Dynamic Body-Part Aim Lock Loop
+-- Continuous Aim Lock Render Loop
 RunService.RenderStepped:Connect(function()
-    if aimLockEnabled and aimLockTarget and aimLockTarget.Character then
-        local char = aimLockTarget.Character
-        local targetPart = char:FindFirstChild(selectedBodyPart)
-            or char:FindFirstChild("HumanoidRootPart")
-            or char:FindFirstChild("UpperTorso")
-            or char:FindFirstChild("Torso")
-            or char:FindFirstChild("Head")
-
+    if (aimLockEnabled or aimLockClosestToggle) and aimLockTarget and aimLockTarget.Character then
+        local targetPart = aimLockTarget.Character:FindFirstChild(selectedAimPart) 
+            or aimLockTarget.Character:FindFirstChild("HumanoidRootPart") 
+            or aimLockTarget.Character:FindFirstChild("Head")
+            
         local cam = workspace.CurrentCamera
         if targetPart and cam then
             cam.CFrame = CFrame.new(cam.CFrame.Position, targetPart.Position)
@@ -1298,7 +1320,6 @@ RunService.RenderStepped:Connect(function()
 
             local isAlive = char and hrp and hum and hum.Health > 0
 
-            -- Reset Visibility State
             e.Highlight.Enabled = false
             e.Billboard.Enabled = false
             if e.TracerLine then e.TracerLine.Visible = false end
